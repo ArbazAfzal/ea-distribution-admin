@@ -9,7 +9,7 @@ import {
   Table,
 } from "@windmill/react-ui";
 import Multiselect from "multiselect-react-dropdown";
-import React from "react";
+import React, { useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { MultiSelect } from "react-multi-select-component";
 import { Modal } from "react-responsive-modal";
@@ -33,6 +33,8 @@ import AttributeOptionTwo from "components/attribute/AttributeOptionTwo";
 import DrawerButton from "components/form/DrawerButton";
 import AttributeListTable from "components/attribute/AttributeListTable";
 import { showingTranslateValue } from "utils/translate";
+import useAsync from "hooks/useAsync";
+import CustomerServices from "services/CustomerServices";
 
 //internal import
 
@@ -88,6 +90,17 @@ const ProductDrawer = ({ id }) => {
 
   const currency = globalSetting?.default_currency || "$";
 
+  console.log(selectedCategory)
+  const { data } = useAsync(CustomerServices.getAllCustomers);
+const [email,setEmail]=useState([])
+  let options = data.map(item => {
+    const obj = {
+      _id: item.email,
+      name: item.email
+    }
+    return obj
+  })
+  console.log(options, "datatat")
   return (
     <>
       <Modal
@@ -258,9 +271,9 @@ const ProductDrawer = ({ id }) => {
                     singleSelect={true}
                     ref={resetRefTwo}
                     hidePlaceholder={true}
-                    onKeyPressFn={function noRefCheck() {}}
-                    onRemove={function noRefCheck() {}}
-                    onSearch={function noRefCheck() {}}
+                    onKeyPressFn={function noRefCheck() { }}
+                    onRemove={function noRefCheck() { }}
+                    onSearch={function noRefCheck() { }}
                     onSelect={(v) => setDefaultCategory(v)}
                     selectedValues={defaultCategory}
                     options={selectedCategory}
@@ -350,6 +363,44 @@ const ProductDrawer = ({ id }) => {
                     tags={tag}
                     onChange={(newTags) => setTag(newTags)}
                   />
+                </div>
+              </div>
+
+
+              <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                <LabelArea label={t("Customer Email")} />
+                <div className="col-span-8 sm:col-span-4">
+
+                  <Multiselect
+                    displayValue="name"
+                    isObject={true}
+                    singleSelect={true}
+                    ref={resetRefTwo}
+                    hidePlaceholder={false}
+                    onKeyPressFn={function noRefCheck() { }}
+                    onRemove={function noRefCheck() { }}
+                    onSearch={function noRefCheck() { }}
+                    onSelect={(e) => setEmail(e)}
+                     selectedValues={email}
+                    options={options}
+                    placeholder={"Customer Email"}
+                  ></Multiselect>
+                </div>
+              </div>
+
+
+              <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                <LabelArea label={t("Discount")} />
+                <div className="col-span-8 sm:col-span-4">
+                  <InputArea
+                    register={register}
+                    required="false"
+                    label={t("Discount")}
+                    name="sku"
+                    type="number"
+                    placeholder={t("Discount")}
+                  />
+                  <Error errorName={errors?.dis} />
                 </div>
               </div>
             </div>

@@ -12,6 +12,8 @@ import ProductServices from "services/ProductServices";
 import { notifyError, notifySuccess } from "utils/toast";
 import SettingServices from "services/SettingServices";
 import { showingTranslateValue } from "utils/translate";
+import CustomerServices from "services/CustomerServices";
+
 
 const useProductSubmit = (id) => {
   const location = useLocation();
@@ -20,6 +22,7 @@ const useProductSubmit = (id) => {
 
   const { data: attribue } = useAsync(AttributeServices.getShowingAttributes);
   const { data: globalSetting } = useAsync(SettingServices.getGlobalSetting);
+ 
 
   // react ref
   const resetRef = useRef([]);
@@ -56,6 +59,7 @@ const useProductSubmit = (id) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [slug, setSlug] = useState("");
 
+
   // console.log("lang", lang);
 
   // console.log(
@@ -66,6 +70,16 @@ const useProductSubmit = (id) => {
   // );
 
   // handle click
+  // const { data } = useAsync(CustomerServices.getAllCustomers);
+  // const [email,setEmail]=useState()
+  //   let options = data.map(item => {
+  //     const obj = {
+  //       _id: item.email,
+  //       name: item.email
+  //     }
+  //     return obj
+  //   })
+  //   console.log(options, "datatat")
   const onCloseModal = () => setOpenModal(false);
   const {
     register,
