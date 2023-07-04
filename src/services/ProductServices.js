@@ -12,7 +12,7 @@ const ProductServices = {
   },
 
   getProductById: async (id) => {
-    return requests.post(`/products/${id}`);
+    return requests.get(`/products/${id}`);
   },
   addProduct: async (body) => {
     return requests.post("/products/add", body);
@@ -21,6 +21,7 @@ const ProductServices = {
     return requests.post("/products/all", body);
   },
   updateProduct: async (id, body) => {
+    console.log("🚀 ~ file: ProductServices.js:24 ~ updateProduct: ~ body:", body)
     return requests.patch(`/products/${id}`, body);
   },
   updateManyProducts: async (body) => {

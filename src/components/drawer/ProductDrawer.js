@@ -40,6 +40,9 @@ import CustomerServices from "services/CustomerServices";
 
 const ProductDrawer = ({ id }) => {
   const { t } = useTranslation();
+  const [email, setEmail] = useState([]);
+  const [disPrice, setDisPrice] = useState(0);
+
 
   const {
     tag,
@@ -86,21 +89,20 @@ const ProductDrawer = ({ id }) => {
     handleSelectImage,
     handleSelectInlineImage,
     handleGenerateCombination,
-  } = useProductSubmit(id);
+  } = useProductSubmit(id, email,disPrice,setDisPrice);
 
   const currency = globalSetting?.default_currency || "$";
 
-  console.log(selectedCategory)
   const { data } = useAsync(CustomerServices.getAllCustomers);
-const [email,setEmail]=useState([])
-  let options = data.map(item => {
+
+  const options = data.map((item) => {
     const obj = {
       _id: item.email,
-      name: item.email
-    }
-    return obj
-  })
-  console.log(options, "datatat")
+      name: item.email,
+    };
+    return obj;
+  });
+
   return (
     <>
       <Modal
@@ -271,9 +273,9 @@ const [email,setEmail]=useState([])
                     singleSelect={true}
                     ref={resetRefTwo}
                     hidePlaceholder={true}
-                    onKeyPressFn={function noRefCheck() { }}
-                    onRemove={function noRefCheck() { }}
-                    onSearch={function noRefCheck() { }}
+                    onKeyPressFn={function noRefCheck() {}}
+                    onRemove={function noRefCheck() {}}
+                    onSearch={function noRefCheck() {}}
                     onSelect={(v) => setDefaultCategory(v)}
                     selectedValues={defaultCategory}
                     options={selectedCategory}
@@ -366,43 +368,51 @@ const [email,setEmail]=useState([])
                 </div>
               </div>
 
+              {id ? (
+                <>
+                  <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                    <LabelArea label={t("Customer Email")} />
+                    <div className="col-span-8 sm:col-span-4">
+                      <Multiselect
+                        displayValue="name"
+                        isObject={true}
+                        singleSelect={false} // Enable multiple selections
+                        ref={resetRefTwo}
+                        hidePlaceholder={false}
+                        onKeyPressFn={function noRefCheck() {}}
+                        onRemove={function noRefCheck() {}}
+                        onSearch={function noRefCheck() {}}
+                        onSelect={(e) => setEmail(e)}
+                        // selectedValues={email}
+                        options={options}
+                        placeholder={"Customer Email"}
+                      ></Multiselect>
+                    </div>
+                  </div>
 
-              <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-                <LabelArea label={t("Customer Email")} />
-                <div className="col-span-8 sm:col-span-4">
+                  <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                    <LabelArea label={t("Discount")} />
+                    <div className="col-span-8 sm:col-span-4">
+                      {/* <InputArea
+                        register={register}
+                        required="false"
+                        label={t("Discount")}
+                        name="sku"
+                        type="number"
+                        placeholder={"Please enter discount price"}
+                      /> */}
 
-                  <Multiselect
-                    displayValue="name"
-                    isObject={true}
-                    singleSelect={true}
-                    ref={resetRefTwo}
-                    hidePlaceholder={false}
-                    onKeyPressFn={function noRefCheck() { }}
-                    onRemove={function noRefCheck() { }}
-                    onSearch={function noRefCheck() { }}
-                    onSelect={(e) => setEmail(e)}
-                     selectedValues={email}
-                    options={options}
-                    placeholder={"Customer Email"}
-                  ></Multiselect>
-                </div>
-              </div>
-
-
-              <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-                <LabelArea label={t("Discount")} />
-                <div className="col-span-8 sm:col-span-4">
-                  <InputArea
-                    register={register}
-                    required="false"
-                    label={t("Discount")}
-                    name="sku"
-                    type="number"
-                    placeholder={t("Discount")}
-                  />
-                  <Error errorName={errors?.dis} />
-                </div>
-              </div>
+                      <input type="number" 
+                                            onChange={(e)=>setDisPrice(e.target.value)}
+                      // defaultValue={disPrice}
+                      />
+                      <Error errorName={errors?.dis} />
+                    </div>
+                  </div>
+                </>
+              ) : (
+                ""
+              )}
             </div>
           )}
 
