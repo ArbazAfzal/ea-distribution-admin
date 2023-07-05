@@ -23,7 +23,7 @@ const useProductSubmit = (id) => {
 
   const { data: attribue } = useAsync(AttributeServices.getShowingAttributes);
   const { data: globalSetting } = useAsync(SettingServices.getGlobalSetting);
- 
+
 
   // react ref
   const resetRef = useRef([]);
@@ -181,9 +181,10 @@ const useProductSubmit = (id) => {
         }
       } else {
         const res = await ProductServices.addProduct(productData);
-        // console.log("res is ", res);
+        console.log("res is ", res);
         if (isCombination) {
-          setUpdatedId(res._id);
+          setUpdatedId(res?._id);
+          console.log(res.id)
           setValue("title", res.title[language ? language : "en"]);
           setValue("description", res.description[language ? language : "en"]);
           setValue("slug", res.slug);
@@ -199,6 +200,7 @@ const useProductSubmit = (id) => {
           setPrice(res?.prices?.price);
           setBarcode(res.barcode);
           setSku(res.sku);
+          // setcustomer(res.customers.customerId)
           const result = res.variants.map(
             ({
               originalPrice,
@@ -301,7 +303,7 @@ const useProductSubmit = (id) => {
         try {
           const res = await ProductServices.getProductById(id);
 
-          // console.log("res", res);
+          console.log("res", res);
 
           if (res) {
             setResData(res);
@@ -482,9 +484,8 @@ const useProductSubmit = (id) => {
     // console.log("handleRemoveVariant", vari, ext);
     swal({
       title: `Are you sure to delete this ${ext ? "Extra" : "combination"}!`,
-      text: `(If Okay, It will be delete this ${
-        ext ? "Extra" : "combination"
-      })`,
+      text: `(If Okay, It will be delete this ${ext ? "Extra" : "combination"
+        })`,
       icon: "warning",
       buttons: true,
       dangerMode: true,
@@ -668,6 +669,9 @@ const useProductSubmit = (id) => {
     handleSelectImage,
     handleSelectInlineImage,
     handleGenerateCombination,
+    updatedId,
+
+
   };
 };
 

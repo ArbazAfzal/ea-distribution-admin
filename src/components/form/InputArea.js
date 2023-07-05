@@ -9,6 +9,7 @@ const InputArea = ({
   label,
   type,
   placeholder,
+  
 }) => {
   return (
     <>
