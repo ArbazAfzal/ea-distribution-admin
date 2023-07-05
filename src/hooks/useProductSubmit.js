@@ -15,8 +15,8 @@ import { showingTranslateValue } from "utils/translate";
 import CustomerServices from "services/CustomerServices";
 
 
-const useProductSubmit = (id, email,disPrice) => {
-  const disEmail=email.map((i)=>i.name)
+const useProductSubmit = (id) => {
+ 
   const location = useLocation();
   const { isDrawerOpen, closeDrawer, setIsUpdate, lang } =
     useContext(SidebarContext);
@@ -53,7 +53,6 @@ const useProductSubmit = (id, email,disPrice) => {
   const [imgId, setImgId] = useState("");
   const [isBulkUpdate, setIsBulkUpdate] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState([]);
-  const [customer, setCustomer] = useState([]);
   const [defaultCategory, setDefaultCategory] = useState([]);
   const [resData, setResData] = useState({});
   const [language, setLanguage] = useState(lang);
@@ -151,12 +150,7 @@ const useProductSubmit = (id, email,disPrice) => {
         },
         isCombination: updatedVariants?.length > 0 ? isCombination : false,
         variants: isCombination ? updatedVariants : [],
-        customers: 
-         [ {
-            // _id: id,
-            email:disEmail ,
-            price: disPrice,
-          }],
+      
         
       };
 

@@ -1,3 +1,4 @@
+import UserDiscount from "pages/UserDiscount";
 import { lazy } from "react";
 
 // use lazy for better code splitting
@@ -36,6 +37,10 @@ const routes = [
   {
     path: "/dashboard",
     component: Dashboard,
+  },
+  {
+    path: "/userDiscount",
+    component: UserDiscount,
   },
   {
     path: "/products",
