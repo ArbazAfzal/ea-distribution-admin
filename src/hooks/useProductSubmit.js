@@ -12,14 +12,18 @@ import ProductServices from "services/ProductServices";
 import { notifyError, notifySuccess } from "utils/toast";
 import SettingServices from "services/SettingServices";
 import { showingTranslateValue } from "utils/translate";
+import CustomerServices from "services/CustomerServices";
+
 
 const useProductSubmit = (id) => {
+ 
   const location = useLocation();
   const { isDrawerOpen, closeDrawer, setIsUpdate, lang } =
     useContext(SidebarContext);
 
   const { data: attribue } = useAsync(AttributeServices.getShowingAttributes);
   const { data: globalSetting } = useAsync(SettingServices.getGlobalSetting);
+
 
   // react ref
   const resetRef = useRef([]);
@@ -56,6 +60,7 @@ const useProductSubmit = (id) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [slug, setSlug] = useState("");
 
+
   // console.log("lang", lang);
 
   // console.log(
@@ -66,6 +71,16 @@ const useProductSubmit = (id) => {
   // );
 
   // handle click
+  // const { data } = useAsync(CustomerServices.getAllCustomers);
+  // const [email,setEmail]=useState()
+  //   let options = data.map(item => {
+  //     const obj = {
+  //       _id: item.email,
+  //       name: item.email
+  //     }
+  //     return obj
+  //   })
+  //   console.log(options, "datatat")
   const onCloseModal = () => setOpenModal(false);
   const {
     register,
@@ -76,7 +91,6 @@ const useProductSubmit = (id) => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    // console.log('data is data',data)
     try {
       setIsSubmitting(true);
       if (!imageUrl) return notifyError("Image is required!");
@@ -136,6 +150,8 @@ const useProductSubmit = (id) => {
         },
         isCombination: updatedVariants?.length > 0 ? isCombination : false,
         variants: isCombination ? updatedVariants : [],
+      
+        
       };
 
       // console.log("productData ===========>", productData, "data", data);
@@ -165,9 +181,10 @@ const useProductSubmit = (id) => {
         }
       } else {
         const res = await ProductServices.addProduct(productData);
-        // console.log("res is ", res);
+        console.log("res is ", res);
         if (isCombination) {
-          setUpdatedId(res._id);
+          setUpdatedId(res?._id);
+          console.log(res.id)
           setValue("title", res.title[language ? language : "en"]);
           setValue("description", res.description[language ? language : "en"]);
           setValue("slug", res.slug);
@@ -183,6 +200,7 @@ const useProductSubmit = (id) => {
           setPrice(res?.prices?.price);
           setBarcode(res.barcode);
           setSku(res.sku);
+          // setcustomer(res.customers.customerId)
           const result = res.variants.map(
             ({
               originalPrice,
@@ -285,7 +303,7 @@ const useProductSubmit = (id) => {
         try {
           const res = await ProductServices.getProductById(id);
 
-          // console.log("res", res);
+          console.log("res", res);
 
           if (res) {
             setResData(res);
@@ -466,9 +484,8 @@ const useProductSubmit = (id) => {
     // console.log("handleRemoveVariant", vari, ext);
     swal({
       title: `Are you sure to delete this ${ext ? "Extra" : "combination"}!`,
-      text: `(If Okay, It will be delete this ${
-        ext ? "Extra" : "combination"
-      })`,
+      text: `(If Okay, It will be delete this ${ext ? "Extra" : "combination"
+        })`,
       icon: "warning",
       buttons: true,
       dangerMode: true,
@@ -652,6 +669,9 @@ const useProductSubmit = (id) => {
     handleSelectImage,
     handleSelectInlineImage,
     handleGenerateCombination,
+    updatedId,
+
+
   };
 };
 

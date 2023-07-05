@@ -24,7 +24,7 @@ import CustomerServices from "services/CustomerServices";
 const Customers = () => {
   const { data, loading } = useAsync(CustomerServices.getAllCustomers);
 
-  // console.log('customer',data)
+  console.log('customer',data)
 
   const {
     userRef,

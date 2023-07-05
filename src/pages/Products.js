@@ -77,6 +77,7 @@ const Products = () => {
     setIsCheck(data?.products.map((li) => li._id));
     if (isCheckAll) {
       setIsCheck([]);
+      console.log(data,"product image")
     }
   };
 

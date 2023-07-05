@@ -9,7 +9,7 @@ import {
   Table,
 } from "@windmill/react-ui";
 import Multiselect from "multiselect-react-dropdown";
-import React from "react";
+import React, { useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { MultiSelect } from "react-multi-select-component";
 import { Modal } from "react-responsive-modal";
@@ -33,12 +33,16 @@ import AttributeOptionTwo from "components/attribute/AttributeOptionTwo";
 import DrawerButton from "components/form/DrawerButton";
 import AttributeListTable from "components/attribute/AttributeListTable";
 import { showingTranslateValue } from "utils/translate";
+import useAsync from "hooks/useAsync";
+import CustomerServices from "services/CustomerServices";
 
 //internal import
 
 const ProductDrawer = ({ id }) => {
   const { t } = useTranslation();
-
+  
+ 
+ 
   const {
     tag,
     setTag,
@@ -87,6 +91,9 @@ const ProductDrawer = ({ id }) => {
   } = useProductSubmit(id);
 
   const currency = globalSetting?.default_currency || "$";
+
+
+  
 
   return (
     <>
@@ -258,9 +265,9 @@ const ProductDrawer = ({ id }) => {
                     singleSelect={true}
                     ref={resetRefTwo}
                     hidePlaceholder={true}
-                    onKeyPressFn={function noRefCheck() {}}
-                    onRemove={function noRefCheck() {}}
-                    onSearch={function noRefCheck() {}}
+                    onKeyPressFn={function noRefCheck() { }}
+                    onRemove={function noRefCheck() { }}
+                    onSearch={function noRefCheck() { }}
                     onSelect={(v) => setDefaultCategory(v)}
                     selectedValues={defaultCategory}
                     options={selectedCategory}
@@ -352,6 +359,7 @@ const ProductDrawer = ({ id }) => {
                   />
                 </div>
               </div>
+
             </div>
           )}
 
