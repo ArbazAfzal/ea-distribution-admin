@@ -16,6 +16,9 @@ const DiscountServices = {
   deleteDiscount: async (id, body) => {
     return requests.delete(`/discount/delete${id}`, body);
   },
+  getDiscountById: async(id,body)=>{
+    return requests.get(`/discount/get/${id}`,body)
+  }
 };
 
 export default DiscountServices;

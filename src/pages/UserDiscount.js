@@ -74,7 +74,7 @@ const UserDiscount = () => {
       discountPrice: discount,
     };
     const res = await DiscountServices.addDiscount(data);
-    console.log("🚀 ~ file: UserDiscount.js:282 ~ handleSubmit ~ res:", res);
+  
   };
 
   const handleAddDiscount = () => {
