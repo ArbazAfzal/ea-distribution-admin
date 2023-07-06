@@ -6,6 +6,7 @@ import { t } from "i18next";
 import Multiselect from "multiselect-react-dropdown";
 import React, { useContext, useState } from "react";
 import CustomerServices from "services/CustomerServices";
+import DiscountServices from "services/DiscountServices";
 import ProductServices from "services/ProductServices";
 
 const UserDiscount = () => {
@@ -57,7 +58,8 @@ const UserDiscount = () => {
         return object;
       })
     : [];
-
+const {dat} = useAsync(DiscountServices.addDiscount())
+console.log(dat,"add")
   return (
     <>
       <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
