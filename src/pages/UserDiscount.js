@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LabelArea from "components/form/LabelArea";
 import { SidebarContext } from "context/SidebarContext";
 import useAsync from "hooks/useAsync";
@@ -6,15 +6,13 @@ import { t } from "i18next";
 import Multiselect from "multiselect-react-dropdown";
 import React, { useContext } from "react";
 import CustomerServices from "services/CustomerServices";
-import DiscountServices from "services/DiscountServices";
 import ProductServices from "services/ProductServices";
-import axios from "axios";
+import DiscountServices from "services/DiscountServices";
 
 const UserDiscount = () => {
   const [email, setEmail] = useState([]);
   const [discount, setDiscount] = useState(0);
   const [name, setName] = useState([]);
-
   const {
     toggleDrawer,
     lang,
@@ -30,7 +28,7 @@ const UserDiscount = () => {
     limitData,
   } = useContext(SidebarContext);
 
-  const res = useAsync( CustomerServices.getAllCustomers);
+  const res = useAsync(CustomerServices.getAllCustomers);
   const optionsForCustomer =
     res.data?.map((item) => {
       const obj = {
@@ -61,18 +59,6 @@ const UserDiscount = () => {
       })
     : [];
 
-  const handleAddDiscount = () => {
-    setDiscount((prevDiscount) => prevDiscount + 1);
-  };
-
-  const handleSubtractDiscount = () => {
-    setDiscount((prevDiscount) => (prevDiscount > 0 ? prevDiscount - 1 : 0));
-  };
-
-  const handleDiscountChange = (e) => {
-    setDiscount(parseInt(e.target.value));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -87,16 +73,24 @@ const UserDiscount = () => {
       customers: selectedCustomerIds,
       discountPrice: discount,
     };
+    const res = await DiscountServices.addDiscount(data);
+    console.log("🚀 ~ file: UserDiscount.js:282 ~ handleSubmit ~ res:", res);
+  };
 
-    try {
-      const response = await axios.post(
-        "https://kachabazar-backend-jet.vercel.app/api/discount/add",
-        data
-      );
+  const handleAddDiscount = () => {
+    setDiscount((prevDiscount) => prevDiscount + 1);
+  };
 
-      console.log("Data posted successfully!", response.data);
-    } catch (error) {
-      console.error("Error posting data:", error);
+  const handleSubtractDiscount = () => {
+    setDiscount((prevDiscount) => prevDiscount - 1);
+  };
+
+  const handleDiscountChange = (e) => {
+    const value = parseInt(e.target.value);
+    if (!isNaN(value)) {
+      setDiscount(value);
+    } else {
+      setDiscount("");
     }
   };
 
