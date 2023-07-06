@@ -51,12 +51,12 @@ const UserDiscount = () => {
   const products = data?.products;
   const optionsForProducts = Array.isArray(products)
     ? products.map(({ _id, slug }) => {
-        const object = {
-          namee: slug,
-          _id: _id,
-        };
-        return object;
-      })
+      const object = {
+        namee: slug,
+        _id: _id,
+      };
+      return object;
+    })
     : [];
 
   const handleSubmit = async (e) => {
@@ -74,7 +74,11 @@ const UserDiscount = () => {
       discountPrice: discount,
     };
     const res = await DiscountServices.addDiscount(data);
-  
+    setName([]);
+    setEmail([]);
+    setDiscount(0)
+
+
   };
 
   const handleAddDiscount = () => {
@@ -104,9 +108,9 @@ const UserDiscount = () => {
             isObject={true}
             singleSelect={false}
             hidePlaceholder={false}
-            onKeyPressFn={function noRefCheck() {}}
-            onRemove={function noRefCheck() {}}
-            onSearch={function noRefCheck() {}}
+            onKeyPressFn={function noRefCheck() { }}
+            onRemove={function noRefCheck() { }}
+            onSearch={function noRefCheck() { }}
             onSelect={(e) => setEmail(e)}
             selectedValues={email}
             options={optionsForCustomer}
@@ -122,9 +126,9 @@ const UserDiscount = () => {
             isObject={true}
             singleSelect={false}
             hidePlaceholder={false}
-            onKeyPressFn={function noRefCheck() {}}
-            onRemove={function noRefCheck() {}}
-            onSearch={function noRefCheck() {}}
+            onKeyPressFn={function noRefCheck() { }}
+            onRemove={function noRefCheck() { }}
+            onSearch={function noRefCheck() { }}
             onSelect={(e) => setName(e)}
             selectedValues={name}
             options={optionsForProducts}
