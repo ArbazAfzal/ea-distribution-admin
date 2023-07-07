@@ -60,6 +60,9 @@ const UserDiscount = () => {
     limitData,
   } = useContext(SidebarContext);
 
+
+const resp= useAsync(DiscountServices.getAllDiscount)
+
   const res = useAsync(CustomerServices.getAllCustomers);
   const optionsForCustomer =
     res.data?.map((item) => {
@@ -348,7 +351,8 @@ const UserDiscount = () => {
               </tr>
             </TableHeader>
             <DiscountTable
-              lang={lang}
+            data={resp.data}
+              // lang={lang}
               // isCheck={isCheck}
               // products={data?.products}
               // setIsCheck={setIsCheck}
@@ -356,12 +360,12 @@ const UserDiscount = () => {
             />
           </Table>
           <TableFooter>
-            <Pagination
+            {/* <Pagination
               totalResults={data?.totalDoc}
               resultsPerPage={limitData}
               onChange={handleChangePage}
               label="Product Page Navigation"
-            />
+            /> */}
           </TableFooter>
         </TableContainer>
        
