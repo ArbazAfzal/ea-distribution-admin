@@ -55,7 +55,9 @@ const DiscountTable = ({ products, isCheck, setIsCheck, currency, lang, data }) 
                             </TableCell>
 
                             <TableCell> 
+                                <span  className="text-sm">
                                  {dis?.discountPrice}
+                                 </span>
                                  </TableCell>
                             <TableCell>
                                 <EditDeleteButton />

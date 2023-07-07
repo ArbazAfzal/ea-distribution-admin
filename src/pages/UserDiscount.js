@@ -360,12 +360,12 @@ const resp= useAsync(DiscountServices.getAllDiscount)
             />
           </Table>
           <TableFooter>
-            {/* <Pagination
+            <Pagination
               totalResults={data?.totalDoc}
               resultsPerPage={limitData}
               onChange={handleChangePage}
               label="Product Page Navigation"
-            /> */}
+            />
           </TableFooter>
         </TableContainer>
        
