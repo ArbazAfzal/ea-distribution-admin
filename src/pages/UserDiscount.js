@@ -41,6 +41,7 @@ import BulkActionDrawer from "components/drawer/BulkActionDrawer";
 import TableLoading from "components/preloader/TableLoading";
 import SettingServices from "services/SettingServices";
 import DiscountTable from "components/discounTable/DiscountTable";
+import DiscountDrawer from "components/drawer/DiscountDrawer";
 const UserDiscount = () => {
   const [email, setEmail] = useState([]);
   const [discount, setDiscount] = useState(0);
@@ -94,130 +95,21 @@ const resp= useAsync(DiscountServices.getAllDiscount)
     })
     : [];
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Get the selected customer IDs
-    const selectedCustomerIds = email.map((item) => item._id);
-
-    // Get the selected product IDs
-    const selectedProductIds = name.map((item) => item._id);
-
-    const data = {
-      products: selectedProductIds,
-      customers: selectedCustomerIds,
-      discountPrice: discount,
-    };
-    const res = await DiscountServices.addDiscount(data);
-    setName([]);
-    setEmail([]);
-    setDiscount(0)
 
 
-  };
 
-  const handleAddDiscount = () => {
-    setDiscount((prevDiscount) => prevDiscount + 1);
-  };
 
-  const handleSubtractDiscount = () => {
-    setDiscount((prevDiscount) => prevDiscount - 1);
-  };
-
-  const handleDiscountChange = (e) => {
-    const value = parseInt(e.target.value);
-    if (!isNaN(value)) {
-      setDiscount(value);
-    } else {
-      setDiscount("");
-    }
-  };
+  
 
   return (
-    // <form onSubmit={handleSubmit}>
-    //   <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-    //     <LabelArea label={t("Customer Email")} />
-    //     <div className="col-span-8 sm:col-span-4">
-    //       <Multiselect
-    //         displayValue="name"
-    //         isObject={true}
-    //         singleSelect={false}
-    //         hidePlaceholder={false}
-    //         onKeyPressFn={function noRefCheck() { }}
-    //         onRemove={function noRefCheck() { }}
-    //         onSearch={function noRefCheck() { }}
-    //         onSelect={(e) => setEmail(e)}
-    //         selectedValues={email}
-    //         options={optionsForCustomer}
-    //         placeholder={"Customer Email"}
-    //       ></Multiselect>
-    //     </div>
-    //   </div>
-    //   <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-    //     <LabelArea label={t("Product Name")} />
-    //     <div className="col-span-8 sm:col-span-4">
-    //       <Multiselect
-    //         displayValue="namee"
-    //         isObject={true}
-    //         singleSelect={false}
-    //         hidePlaceholder={false}
-    //         onKeyPressFn={function noRefCheck() { }}
-    //         onRemove={function noRefCheck() { }}
-    //         onSearch={function noRefCheck() { }}
-    //         onSelect={(e) => setName(e)}
-    //         selectedValues={name}
-    //         options={optionsForProducts}
-    //         placeholder={"Enter product name"}
-    //       ></Multiselect>
-    //     </div>
-    //   </div>
-
-    //   <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-    //     <LabelArea label={t("Discount")} />
-    //     <div className="col-span-8 sm:col-span-4">
-    //       <div className="flex items-center">
-    //         <button
-    //           type="button"
-    //           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    //           onClick={handleSubtractDiscount}
-    //         >
-    //           -
-    //         </button>
-    //         <input
-    //           type="number"
-    //           value={discount}
-    //           onChange={handleDiscountChange}
-    //           className="border h-12 text-sm focus:outline-none block w-full bg-gray-100 dark:bg-white border-transparent focus:bg-white px-3"
-    //         />
-    //         <button
-    //           type="button"
-    //           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    //           onClick={handleAddDiscount}
-    //         >
-    //           +
-    //         </button>
-    //       </div>
-    //     </div>
-    //   </div>
-
-    //   <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-    //     <div className="col-span-8 sm:col-span-4">
-    //       <button
-    //         type="submit"
-    //         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    //       >
-    //         Submit
-    //       </button>
-    //     </div>
-    //   </div>
-    // </form>
+   
     <>
        <PageTitle>{t("Discount Page")}</PageTitle>
       <DeleteModal 
     />
       <BulkActionDrawer title="Discount" />
-      <MainDrawer>
-        <ProductDrawer />
+      <MainDrawer >
+        <DiscountDrawer  />
       </MainDrawer>
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
         <CardBody className="">
@@ -271,7 +163,7 @@ const resp= useAsync(DiscountServices.getAllDiscount)
                   <span className="mr-2">
                     <FiPlus />
                   </span>
-                  {t("AddProduct")}
+                  {t("Add Discount")}
                 </Button>
               </div>
             </div>
@@ -329,8 +221,9 @@ const resp= useAsync(DiscountServices.getAllDiscount)
         </CardBody>
       </Card>
 
-      
-        {/* <TableLoading row={12} col={7} width={160} height={20} /> */}
+      {loading ? 
+         <TableLoading row={12} col={7} width={160} height={20} /> 
+         :resp.length !== 0 &&(
     
         <TableContainer className="mb-8 rounded-b-lg">
           <Table>
@@ -368,7 +261,9 @@ const resp= useAsync(DiscountServices.getAllDiscount)
             />
           </TableFooter>
         </TableContainer>
-       
+)}
+
+{!loading && data.length === 0 && <NotFound title="Discount page not found" />}
         {/* <NotFound title="Product" /> */}
        
     </>
