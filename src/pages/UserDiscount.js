@@ -101,13 +101,12 @@ const resp= useAsync(DiscountServices.getAllDiscount)
 
 
 
-  
 
   return (
    
     <>
        <PageTitle>{t("Discount Page")}</PageTitle>
-      <DeleteModal 
+      <DeleteModal  
     />
       <BulkActionDrawer title="Discount" />
       <MainDrawer >
