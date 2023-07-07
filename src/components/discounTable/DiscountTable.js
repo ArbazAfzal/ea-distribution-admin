@@ -25,7 +25,8 @@ const DiscountTable = ({ products, isCheck, setIsCheck, currency, lang, data }) 
             setIsCheck(isCheck.filter((item) => item !== id));
         }
     };
-    console.log(data, "============table")
+  
+ 
     return (
         <>
             {isCheck?.length < 1 && <DeleteModal id={serviceId} title={title} />}
@@ -60,7 +61,11 @@ const DiscountTable = ({ products, isCheck, setIsCheck, currency, lang, data }) 
                                  </span>
                                  </TableCell>
                             <TableCell>
-                                <EditDeleteButton />
+                                <EditDeleteButton
+                                
+                                 handleUpdate={handleUpdate}
+                                 handleModalOpen={handleModalOpen}
+                                />
                             </TableCell>
                         </TableRow>
                     ))}

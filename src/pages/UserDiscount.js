@@ -62,6 +62,8 @@ const UserDiscount = () => {
   } = useContext(SidebarContext);
 
 
+  const { allId, handleUpdateMany, handleDeleteMany } = useToggleDrawer();
+
 const resp= useAsync(DiscountServices.getAllDiscount)
 
   const res = useAsync(CustomerServices.getAllCustomers);
@@ -223,8 +225,7 @@ const resp= useAsync(DiscountServices.getAllDiscount)
 
       {loading ? 
          <TableLoading row={12} col={7} width={160} height={20} /> 
-         :resp.length !== 0 &&(
-    
+         :resp?.data?.length !== 0 &&(
         <TableContainer className="mb-8 rounded-b-lg">
           <Table>
             <TableHeader>
