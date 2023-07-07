@@ -143,14 +143,14 @@ const DiscountTable = ({ products, isCheck, setIsCheck, currency, lang, data }) 
               </TableCell>
               <TableCell>
                 <EditDeleteButton
-                  id={dis.id} // Replace with the appropriate discount ID prop
-                  title={dis.title} // Replace with the appropriate discount title prop
-                  handleUpdate={handleUpdate} // Replace with the appropriate update function prop
-                  handleModalOpen={handleModalOpen} // Replace with the appropriate modal open function prop
-                  isCheck={isCheck} // Replace with the appropriate isCheck prop
-                  product={dis} // Replace with the appropriate discount object prop
-                  parent={parent} // Replace with the appropriate parent prop
-                  handleUpdateDiscount={handleUpdateDiscount} // Pass the handleUpdateDiscount function prop
+                  id={dis.id}
+                  title={dis.title}
+                  handleUpdate={handleUpdate}
+                  handleModalOpen={handleModalOpen} 
+                  isCheck={isCheck}
+                  product={dis}
+                  parent={parent}
+                  handleUpdateDiscount={handleUpdateDiscount} 
                 />
               </TableCell>
             </TableRow>
