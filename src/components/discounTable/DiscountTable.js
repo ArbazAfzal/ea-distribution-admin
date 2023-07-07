@@ -51,7 +51,7 @@ const DiscountTable = ({ products, isCheck, setIsCheck, currency, lang, data }) 
                                 </span>
                                 </TableCell>
                             <TableCell>
-                                {/* <span className="text-sm">{dis?.products?.[0]?.title}</span> */}
+                                <span className="text-sm">{dis?.products?.[0]?.title?.en}</span>
                             </TableCell>
 
                             <TableCell> 
