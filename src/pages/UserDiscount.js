@@ -8,7 +8,39 @@ import React, { useContext } from "react";
 import CustomerServices from "services/CustomerServices";
 import ProductServices from "services/ProductServices";
 import DiscountServices from "services/DiscountServices";
+import {
+  Table,
+  TableHeader,
+  TableCell,
+  TableFooter,
+  TableContainer,
+  Select,
+  Input,
+  Button,
+  Card,
+  CardBody,
+  Pagination,
+} from "@windmill/react-ui";
+import PageTitle from "components/Typography/PageTitle";
 
+import useToggleDrawer from "hooks/useToggleDrawer";
+import UploadManyTwo from "components/common/UploadManyTwo";
+import NotFound from "components/table/NotFound";
+
+
+
+import ProductTable from "components/product/ProductTable";
+import SelectCategory from "components/form/SelectCategory";
+import MainDrawer from "components/drawer/MainDrawer";
+import ProductDrawer from "components/drawer/ProductDrawer";
+import CheckBox from "components/form/CheckBox";
+import useProductFilter from "hooks/useProductFilter";
+import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
+import DeleteModal from "components/modal/DeleteModal";
+import BulkActionDrawer from "components/drawer/BulkActionDrawer";
+import TableLoading from "components/preloader/TableLoading";
+import SettingServices from "services/SettingServices";
+import DiscountTable from "components/discounTable/DiscountTable";
 const UserDiscount = () => {
   const [email, setEmail] = useState([]);
   const [discount, setDiscount] = useState(0);
@@ -99,84 +131,245 @@ const UserDiscount = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-        <LabelArea label={t("Customer Email")} />
-        <div className="col-span-8 sm:col-span-4">
-          <Multiselect
-            displayValue="name"
-            isObject={true}
-            singleSelect={false}
-            hidePlaceholder={false}
-            onKeyPressFn={function noRefCheck() { }}
-            onRemove={function noRefCheck() { }}
-            onSearch={function noRefCheck() { }}
-            onSelect={(e) => setEmail(e)}
-            selectedValues={email}
-            options={optionsForCustomer}
-            placeholder={"Customer Email"}
-          ></Multiselect>
-        </div>
-      </div>
-      <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-        <LabelArea label={t("Product Name")} />
-        <div className="col-span-8 sm:col-span-4">
-          <Multiselect
-            displayValue="namee"
-            isObject={true}
-            singleSelect={false}
-            hidePlaceholder={false}
-            onKeyPressFn={function noRefCheck() { }}
-            onRemove={function noRefCheck() { }}
-            onSearch={function noRefCheck() { }}
-            onSelect={(e) => setName(e)}
-            selectedValues={name}
-            options={optionsForProducts}
-            placeholder={"Enter product name"}
-          ></Multiselect>
-        </div>
-      </div>
+    // <form onSubmit={handleSubmit}>
+    //   <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+    //     <LabelArea label={t("Customer Email")} />
+    //     <div className="col-span-8 sm:col-span-4">
+    //       <Multiselect
+    //         displayValue="name"
+    //         isObject={true}
+    //         singleSelect={false}
+    //         hidePlaceholder={false}
+    //         onKeyPressFn={function noRefCheck() { }}
+    //         onRemove={function noRefCheck() { }}
+    //         onSearch={function noRefCheck() { }}
+    //         onSelect={(e) => setEmail(e)}
+    //         selectedValues={email}
+    //         options={optionsForCustomer}
+    //         placeholder={"Customer Email"}
+    //       ></Multiselect>
+    //     </div>
+    //   </div>
+    //   <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+    //     <LabelArea label={t("Product Name")} />
+    //     <div className="col-span-8 sm:col-span-4">
+    //       <Multiselect
+    //         displayValue="namee"
+    //         isObject={true}
+    //         singleSelect={false}
+    //         hidePlaceholder={false}
+    //         onKeyPressFn={function noRefCheck() { }}
+    //         onRemove={function noRefCheck() { }}
+    //         onSearch={function noRefCheck() { }}
+    //         onSelect={(e) => setName(e)}
+    //         selectedValues={name}
+    //         options={optionsForProducts}
+    //         placeholder={"Enter product name"}
+    //       ></Multiselect>
+    //     </div>
+    //   </div>
 
-      <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-        <LabelArea label={t("Discount")} />
-        <div className="col-span-8 sm:col-span-4">
-          <div className="flex items-center">
-            <button
-              type="button"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={handleSubtractDiscount}
-            >
-              -
-            </button>
-            <input
-              type="number"
-              value={discount}
-              onChange={handleDiscountChange}
-              className="border h-12 text-sm focus:outline-none block w-full bg-gray-100 dark:bg-white border-transparent focus:bg-white px-3"
-            />
-            <button
-              type="button"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={handleAddDiscount}
-            >
-              +
-            </button>
-          </div>
-        </div>
-      </div>
+    //   <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+    //     <LabelArea label={t("Discount")} />
+    //     <div className="col-span-8 sm:col-span-4">
+    //       <div className="flex items-center">
+    //         <button
+    //           type="button"
+    //           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    //           onClick={handleSubtractDiscount}
+    //         >
+    //           -
+    //         </button>
+    //         <input
+    //           type="number"
+    //           value={discount}
+    //           onChange={handleDiscountChange}
+    //           className="border h-12 text-sm focus:outline-none block w-full bg-gray-100 dark:bg-white border-transparent focus:bg-white px-3"
+    //         />
+    //         <button
+    //           type="button"
+    //           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    //           onClick={handleAddDiscount}
+    //         >
+    //           +
+    //         </button>
+    //       </div>
+    //     </div>
+    //   </div>
 
-      <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-        <div className="col-span-8 sm:col-span-4">
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    //   <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+    //     <div className="col-span-8 sm:col-span-4">
+    //       <button
+    //         type="submit"
+    //         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    //       >
+    //         Submit
+    //       </button>
+    //     </div>
+    //   </div>
+    // </form>
+    <>
+       <PageTitle>{t("Discount Page")}</PageTitle>
+      <DeleteModal 
+    />
+      <BulkActionDrawer title="Discount" />
+      <MainDrawer>
+        <ProductDrawer />
+      </MainDrawer>
+      <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
+        <CardBody className="">
+          <form
+            onSubmit={handleSubmitForAll}
+            className="py-3 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6  xl:flex"
           >
-            Submit
-          </button>
-        </div>
-      </div>
-    </form>
+            <div className="flex justify-start xl:w-1/2  md:w-full">
+              <UploadManyTwo
+                title="Products"
+                // filename={filename}
+                // isDisabled={isDisabled}
+                // totalDoc={data?.totalDoc}
+                // handleSelectFile={handleSelectFile}
+                // handleUploadMultiple={handleUploadMultiple}
+                // handleRemoveSelectFile={handleRemoveSelectFile}
+              />
+            </div>
+            <div className="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start flex-grow-0">
+              <div className="w-full md:w-40 lg:w-40 xl:w-40 mr-3 mb-3 lg:mb-0">
+                <Button
+                  // disabled={isCheck.length < 1}
+                  // onClick={() => handleUpdateMany(isCheck)}
+                  className="w-full rounded-md h-12 btn-gray text-gray-600 sm:mb-3"
+                >
+                  <span className="mr-2">
+                    <FiEdit />
+                  </span>
+                  {t("BulkAction")}
+                </Button>
+              </div>
+
+              <div className="w-full md:w-32 lg:w-32 xl:w-32 mr-3 mb-3 lg:mb-0">
+                <Button
+                  // disabled={isCheck?.length < 1}
+                  // onClick={() => handleDeleteMany(isCheck, data.products)}
+                  className="w-full rounded-md h-12 bg-red-300 disabled btn-red"
+                >
+                  <span className="mr-2">
+                    <FiTrash2 />
+                  </span>
+
+                  {t("Delete")}
+                </Button>
+              </div>
+              <div className="w-full md:w-48 lg:w-48 xl:w-48">
+                <Button
+                  onClick={toggleDrawer}
+                  className="w-full rounded-md h-12"
+                >
+                  <span className="mr-2">
+                    <FiPlus />
+                  </span>
+                  {t("AddProduct")}
+                </Button>
+              </div>
+            </div>
+          </form>
+        </CardBody>
+      </Card>
+
+      <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 rounded-t-lg rounded-0 mb-4">
+        <CardBody>
+          <form
+            onSubmit={handleSubmitForAll}
+            className="py-3 grid gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex"
+          >
+            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+              <Input
+                ref={searchRef}
+                className="border h-12 text-sm focus:outline-none block w-full bg-gray-100 border-transparent focus:bg-white"
+                type="search"
+                name="search"
+                placeholder="Search Product"
+              />
+              <button
+                type="submit"
+                className="absolute right-0 top-0 mt-5 mr-1"
+              ></button>
+            </div>
+
+            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+              {/* <SelectCategory setCategory={setCategory} lang={lang} /> */}
+            </div>
+
+            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+              <Select
+                onChange={(e) => setSortedField(e.target.value)}
+                className="border h-12 text-sm focus:outline-none block w-full bg-gray-100 border-transparent focus:bg-white"
+              >
+                <option value="All" defaultValue hidden>
+                  {t("Price")}
+                </option>
+                <option value="low">{t("LowtoHigh")}</option>
+                <option value="high">{t("HightoLow")}</option>
+                <option value="published">{t("Published")}</option>
+                <option value="unPublished">{t("Unpublished")}</option>
+                <option value="status-selling">{t("StatusSelling")}</option>
+                <option value="status-out-of-stock">{t("StatusStock")}</option>
+                <option value="date-added-asc">{t("DateAddedAsc")}</option>
+                <option value="date-added-desc">{t("DateAddedDesc")}</option>
+                <option value="date-updated-asc">{t("DateUpdatedAsc")}</option>
+                <option value="date-updated-desc">
+                  {t("DateUpdatedDesc")}
+                </option>
+              </Select>
+            </div>
+          </form>
+        </CardBody>
+      </Card>
+
+      
+        {/* <TableLoading row={12} col={7} width={160} height={20} /> */}
+    
+        <TableContainer className="mb-8 rounded-b-lg">
+          <Table>
+            <TableHeader>
+              <tr>
+                <TableCell>
+                  <CheckBox
+                    type="checkbox"
+                    name="selectAll"
+                    id="selectAll"
+                    // isChecked={isCheckAll}
+                    // handleClick={handleSelectAll}
+                  />
+                </TableCell>
+                <TableCell>Customer Email</TableCell>
+                <TableCell>Product Name</TableCell>
+                <TableCell > Discount</TableCell>
+              </tr>
+            </TableHeader>
+            <DiscountTable
+              lang={lang}
+              // isCheck={isCheck}
+              // products={data?.products}
+              // setIsCheck={setIsCheck}
+              // currency={currency}
+            />
+          </Table>
+          <TableFooter>
+            <Pagination
+              totalResults={data?.totalDoc}
+              resultsPerPage={limitData}
+              onChange={handleChangePage}
+              label="Product Page Navigation"
+            />
+          </TableFooter>
+        </TableContainer>
+       
+        {/* <NotFound title="Product" /> */}
+       
+    </>
   );
-};
+};        
+ 
 
 export default UserDiscount;
