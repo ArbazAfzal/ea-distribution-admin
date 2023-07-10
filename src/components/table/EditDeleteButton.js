@@ -102,8 +102,9 @@ const EditDeleteButton = ({
   handleUpdateDiscount, // Add handleUpdateDiscount prop
 }) => {
   console.log("🚀 ~ file: EditDeleteButton.js:19 ~ children:", children);
+
   const { t } = useTranslation();
-  // console.log('edite delet button')
+   console.log(id,'edite delet button')
   return (
     <>
       <div className="flex justify-end text-right">

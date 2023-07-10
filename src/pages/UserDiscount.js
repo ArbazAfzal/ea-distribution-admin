@@ -62,12 +62,12 @@ const UserDiscount = () => {
   } = useContext(SidebarContext);
 
 
-  const { allId, handleUpdateMany, handleDeleteMany } = useToggleDrawer();
-
-  const resp= useAsync(() =>
-  DiscountServices.getAllDiscount(currentPage, limitData),
-  [currentPage, limitData]
-)
+  const { allId, handleUpdateMany, handleDeleteMany, serviceId } = useToggleDrawer();
+  console.log(serviceId, "----------------------------------")
+  const resp = useAsync(() =>
+    DiscountServices.getAllDiscount(currentPage, limitData),
+    [currentPage, limitData]
+  )
 
   const res = useAsync(CustomerServices.getAllCustomers);
   const optionsForCustomer =
@@ -101,19 +101,15 @@ const UserDiscount = () => {
     : [];
 
 
-
-
-
-
   return (
-   
+
     <>
-       <PageTitle>{t("Discount Page")}</PageTitle>
-      <DeleteModal  
-    />
+      <PageTitle>{t("Discount Page")}</PageTitle>
+      <DeleteModal
+      />
       <BulkActionDrawer title="Discount" />
       <MainDrawer >
-        <DiscountDrawer  />
+        <DiscountDrawer id={serviceId} />
       </MainDrawer>
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
         <CardBody className="">
@@ -124,12 +120,12 @@ const UserDiscount = () => {
             <div className="flex justify-start xl:w-1/2  md:w-full">
               <UploadManyTwo
                 title="Products"
-                // filename={filename}
-                // isDisabled={isDisabled}
-                // totalDoc={data?.totalDoc}
-                // handleSelectFile={handleSelectFile}
-                // handleUploadMultiple={handleUploadMultiple}
-                // handleRemoveSelectFile={handleRemoveSelectFile}
+              // filename={filename}
+              // isDisabled={isDisabled}
+              // totalDoc={data?.totalDoc}
+              // handleSelectFile={handleSelectFile}
+              // handleUploadMultiple={handleUploadMultiple}
+              // handleRemoveSelectFile={handleRemoveSelectFile}
               />
             </div>
             <div className="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start flex-grow-0">
@@ -225,53 +221,53 @@ const UserDiscount = () => {
         </CardBody>
       </Card>
 
-      {loading ? 
-         <TableLoading row={12} col={7} width={160} height={20} /> 
-         :resp?.data?.length !== 0 &&(
-        <TableContainer className="mb-8 rounded-b-lg">
-          <Table>
-            <TableHeader>
-              <tr>
-                <TableCell>
-                  <CheckBox
-                    type="checkbox"
-                    name="selectAll"
-                    id="selectAll"
+      {loading ?
+        <TableLoading row={12} col={7} width={160} height={20} />
+        : resp?.data?.length !== 0 && (
+          <TableContainer className="mb-8 rounded-b-lg">
+            <Table>
+              <TableHeader>
+                <tr>
+                  <TableCell>
+                    <CheckBox
+                      type="checkbox"
+                      name="selectAll"
+                      id="selectAll"
                     // isChecked={isCheckAll}
                     // handleClick={handleSelectAll}
-                  />
-                </TableCell>
-                <TableCell>Customer Email</TableCell>
-                <TableCell>Product Name</TableCell>
-                <TableCell > Discount</TableCell>
-              </tr>
-            </TableHeader>
-            <DiscountTable
-            data={resp.data}
+                    />
+                  </TableCell>
+                  <TableCell>Customer Email</TableCell>
+                  <TableCell>Product Name</TableCell>
+                  <TableCell > Discount</TableCell>
+                </tr>
+              </TableHeader>
+              <DiscountTable
+                data={resp.data}
               // lang={lang}
               // isCheck={isCheck}
               // products={data?.products}
               // setIsCheck={setIsCheck}
               // currency={currency}
-            />
-          </Table>
-          <TableFooter>
-            <Pagination
-              totalResults={resp?.totalDoc}
-              resultsPerPage={limitData}
-              onChange={handleChangePage}
-              label="Discount page Navigation"
-            />
-          </TableFooter>
-        </TableContainer>
-)}
+              />
+            </Table>
+            <TableFooter>
+              <Pagination
+                totalResults={resp?.totalDoc}
+                resultsPerPage={limitData}
+                onChange={handleChangePage}
+                label="Discount page Navigation"
+              />
+            </TableFooter>
+          </TableContainer>
+        )}
 
-{!loading && data.length === 0 && <NotFound title="Discount page not found" />}
-        {/* <NotFound title="Product" /> */}
-       
+      {!loading && data.length === 0 && <NotFound title="Discount page not found" />}
+      {/* <NotFound title="Product" /> */}
+
     </>
   );
-};        
- 
+};
+
 
 export default UserDiscount;
