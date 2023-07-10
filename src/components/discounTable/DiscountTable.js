@@ -143,13 +143,13 @@ const DiscountTable = ({ products, isCheck, setIsCheck, currency, lang, data }) 
               </TableCell>
               <TableCell>
                 <EditDeleteButton
-                  id={dis.id}
+                  id={dis._id}
                   title={dis.title}
                   handleUpdate={handleUpdate}
                   handleModalOpen={handleModalOpen} 
                   isCheck={isCheck}
                   product={dis}
-                  parent={parent}
+                //  parent={parent}
                   handleUpdateDiscount={handleUpdateDiscount} 
                 />
               </TableCell>

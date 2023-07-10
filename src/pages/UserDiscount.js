@@ -64,7 +64,10 @@ const UserDiscount = () => {
 
   const { allId, handleUpdateMany, handleDeleteMany } = useToggleDrawer();
 
-const resp= useAsync(DiscountServices.getAllDiscount)
+  const resp= useAsync(() =>
+  DiscountServices.getAllDiscount(currentPage, limitData),
+  [currentPage, limitData]
+)
 
   const res = useAsync(CustomerServices.getAllCustomers);
   const optionsForCustomer =
@@ -254,10 +257,10 @@ const resp= useAsync(DiscountServices.getAllDiscount)
           </Table>
           <TableFooter>
             <Pagination
-              totalResults={data?.totalDoc}
+              totalResults={resp?.totalDoc}
               resultsPerPage={limitData}
               onChange={handleChangePage}
-              label="Product Page Navigation"
+              label="Discount page Navigation"
             />
           </TableFooter>
         </TableContainer>

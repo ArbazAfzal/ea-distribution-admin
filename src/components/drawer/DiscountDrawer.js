@@ -197,7 +197,7 @@ const optionsForProducts = Array.isArray(products)
           >
             Submit
           </button> */}
-          <DrawerButton  title="Discount"  />
+          <DrawerButton  title="Discount"   />
         </div>
       </div>
     </form>
