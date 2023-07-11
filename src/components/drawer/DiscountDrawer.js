@@ -35,9 +35,9 @@
 //     limitData,
 //   } = useContext(SidebarContext);
 
-//   const {
-// id
-//   } = useDiscountSubmit();
+//   const = useDiscountSubmit();
+//   console.log("🚀 ~ file: DiscountDrawer.js:39 ~ DiscountDrawer ~ ", 
+ 
 
 //   const resp = useAsync(DiscountServices.getAllDiscount)
 
@@ -124,13 +124,13 @@
 //   return (
 //     <>
 
-//       <div className="w-full relative p-6 border-b border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+//       {/* <div className="w-full relative p-6 border-b border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
 //         {id ? (
 //           <Title title={t("Update Discount")} description={t("Update Discount")} />
 //         ) : (
 //           <Title title={t("Add Discount")} description={t("Add Discount")} />
 //         )}
-//       </div>
+//       </div> */}
 //       <Scrollbars className="w-full md:w-7/12 lg:w-8/12 xl:w-8/12 relative dark:bg-gray-700 dark:text-gray-200">
 //         <form onSubmit={handleSubmit}>
 //           <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
@@ -215,107 +215,183 @@
 // }
 
 // export default DiscountDrawer
-import React from "react";
-import { Scrollbars } from "react-custom-scrollbars-2";
-import { Card, CardBody, Input } from "@windmill/react-ui";
-import { useTranslation } from "react-i18next";
-import useDiscountSubmit from "hooks/useDiscountSubmit";
-import Title from "components/form/Title";
+// DiscountDrawer.js
+import { useState, useContext, useEffect } from "react";
+import { SidebarContext } from "context/SidebarContext";
 import LabelArea from "components/form/LabelArea";
-import Uploader from "components/image-uploader/Uploader";
-import InputArea from "components/form/InputArea";
-import Error from "components/form/Error";
-import DrawerButton from "components/form/DrawerButton";
+import Multiselect from "multiselect-react-dropdown";
+import CustomerServices from "services/CustomerServices";
+import ProductServices from "services/ProductServices";
+import DiscountServices from "services/DiscountServices";
+import { notifyError, notifySuccess } from 'utils/toast';
+import Title from 'components/form/Title';
+import { Scrollbars } from "react-custom-scrollbars-2";
+import DrawerButton from 'components/form/DrawerButton';
+import useDiscountSubmit from 'hooks/useDiscountSubmit';
+import { t } from "i18next";
+import useAsync from "hooks/useAsync";
 
-const DiscountDrawer = ({ id }) => {
+function DiscountDrawer() {
   const {
-    register,
-    handleSubmit,
+    toggleDrawer,
+    lang,
+    currentPage,
+    handleChangePage,
+    searchText,
+    category,
+    setCategory,
+    searchRef,
+    handleSubmitForAll,
+    sortedField,
+    setSortedField,
+    limitData,
+  } = useContext(SidebarContext);
+  
+  const {  
+     register,
     onSubmit,
     errors,
-    checked,
-    setChecked,
+    email,
+    handleCustomerSelect,
+    handleCustomerRemove,
+    name,
+    handleProductSelect,
+    handleProductRemove,
+    discount,
+    handleAddDiscount,
+    handleSubtractDiscount,
+    handleDiscountChange,
     isSubmitting,
-  } = useDiscountSubmit(id);
-  const { t } = useTranslation();
-  console.log(id)
+    setEmail,
+    setDiscount,
+    // handleSubmit,
+    setName
+  }
+     = useDiscountSubmit();
+
+    console.log("email:::", email)
+    console.log("discount:::", discount)
+    console.log("name:::", name)
+  const res = useAsync(CustomerServices.getAllCustomers);
+  const optionsForCustomer =
+    res.data?.map((item) => ({
+      name: item.email,
+      _id: item._id,
+    })) ?? [];
+useEffect(() =>{},[discount])
+  const { data, loading } = useAsync(() =>
+    ProductServices.getAllProducts({
+      page: currentPage,
+      limit: limitData,
+      category: category,
+      title: searchText,
+      price: sortedField,
+    }),
+    []
+  );
+  const products = data?.products;
+  const optionsForProducts = Array.isArray(products)
+    ? products.map(({ _id, slug }) => ({
+        namee: slug,
+        _id: _id,
+      }))
+    : [];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const selectedCustomerIds = email.map((item) => item._id);
+    const selectedProductIds = name.map((item) => item._id);
+    if (selectedCustomerIds.length === 0 || selectedProductIds.length === 0 || discount === 0) {
+      notifyError("All fields are required!");
+      return;
+    } else {
+      notifySuccess("Discount added successfully");
+    }
+    const discountData = {
+      products: selectedProductIds,
+      customers: selectedCustomerIds,
+      discountPrice: discount,
+    };
+    const res = await DiscountServices.addDiscount(discountData);
+
+  };
 
   return (
     <>
-      <div className="w-full relative p-6 border-b border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
-        {id ? (
-          <Title
-            register={register}
-            title={t("UpdateDiscount")}
-            description={t("Update Discount")}
-          />
-        ) : (
-          <Title
-            register={register}
-            title={t("AddDiscount")}
-            description={t("Add Discount")}
-          />
-        )}
-      </div>
       <Scrollbars className="w-full md:w-7/12 lg:w-8/12 xl:w-8/12 relative dark:bg-gray-700 dark:text-gray-200">
-        <Card className="overflow-y-scroll flex-grow scrollbar-hide w-full max-h-full">
-          <CardBody>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="px-6 pt-8 flex-grow scrollbar-hide w-full max-h-full pb-40">
-                <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-                  <LabelArea label="Name" />
-                  <div className="col-span-8 sm:col-span-4">
-                    <InputArea
-                      register={register}
-                      label="Name"
-                      name="name"
-                      type="text"
-                      placeholder="Discount name"
-                    />
-                    <Error errorName={errors.name} />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-                  <LabelArea label="Email" />
-                  <div className="col-span-8 sm:col-span-4">
-                    <InputArea
-                      register={register}
-                      label="Email"
-                      name="email"
-                      type="text"
-                      placeholder="Email"
-                    />
-                    <Error errorName={errors.email} />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-                  <LabelArea label="Discount Price" />
-                  <div className="col-span-8 sm:col-span-4">
-                    <InputArea
-                      register={register}
-                      label="Discount Price"
-                      name="discountPrice"
-                      type="number"
-                      placeholder="Discount price"
-                    />
-                    <Error errorName={errors.discountPrice} />
-                  </div>
-                </div>
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+            <LabelArea label={t("Customer Email")} />
+            <div className="col-span-8 sm:col-span-4">
+              <Multiselect
+                displayValue="name"
+                isObject={true}
+                singleSelect={false}
+                hidePlaceholder={false}
+                onKeyPressFn={function noRefCheck() {}}
+                onRemove={handleCustomerRemove}
+                onSearch={function noRefCheck() {}}
+                onSelect={handleCustomerSelect}
+                selectedValues={email}
+                options={optionsForCustomer}
+                placeholder={"Customer Email"}
+              ></Multiselect>
+            </div>
+          </div>
+          <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+            <LabelArea label={t("Product Name")} />
+            <div className="col-span-8 sm:col-span-4">
+              <Multiselect
+                displayValue="namee"
+                isObject={true}
+                singleSelect={false}
+                hidePlaceholder={false}
+                onKeyPressFn={function noRefCheck() {}}
+                onRemove={handleProductRemove}
+                onSearch={function noRefCheck() {}}
+                onSelect={handleProductSelect}
+                selectedValues={name}
+                options={optionsForProducts}
+                placeholder={"Enter product name"}
+              ></Multiselect>
+            </div>
+          </div>
+          <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+            <LabelArea label={t("Discount")} />
+            <div className="col-span-8 sm:col-span-4">
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={handleSubtractDiscount}
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  value={discount}
+                  onChange={handleDiscountChange}
+                  className="border h-12 text-sm focus:outline-none block w-full bg-gray-100 dark:bg-white border-transparent focus:bg-white px-3"
+                />
+                <button
+                  type="button"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={handleAddDiscount}
+                >
+                  +
+                </button>
               </div>
-
-              <DrawerButton
-                id={id}
-                title="Discount"
-                isSubmitting={isSubmitting}
-              />
-            </form>
-          </CardBody>
-        </Card>
+            </div>
+          </div>
+          <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+            <div className="col-span-8 sm:col-span-4">
+              <DrawerButton title="Discount" />
+            </div>
+          </div>
+        </form>
       </Scrollbars>
     </>
   );
-};
+}
 
 export default DiscountDrawer;

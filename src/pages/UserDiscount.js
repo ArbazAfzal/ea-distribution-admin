@@ -27,8 +27,6 @@ import useToggleDrawer from "hooks/useToggleDrawer";
 import UploadManyTwo from "components/common/UploadManyTwo";
 import NotFound from "components/table/NotFound";
 
-
-
 import ProductTable from "components/product/ProductTable";
 import SelectCategory from "components/form/SelectCategory";
 import MainDrawer from "components/drawer/MainDrawer";
@@ -42,10 +40,8 @@ import TableLoading from "components/preloader/TableLoading";
 import SettingServices from "services/SettingServices";
 import DiscountTable from "components/discounTable/DiscountTable";
 import DiscountDrawer from "components/drawer/DiscountDrawer";
+import useDiscountSubmit from "hooks/useDiscountSubmit";
 const UserDiscount = () => {
-  const [email, setEmail] = useState([]);
-  const [discount, setDiscount] = useState(0);
-  const [name, setName] = useState([]);
   const {
     toggleDrawer,
     lang,
@@ -61,14 +57,11 @@ const UserDiscount = () => {
     limitData,
   } = useContext(SidebarContext);
 
-
-  const { allId, handleUpdateMany, handleDeleteMany, serviceId } = useToggleDrawer();
-  console.log(serviceId, "----------------------------------")
-  const resp = useAsync(() =>
-    DiscountServices.getAllDiscount(currentPage, limitData),
+  const resp = useAsync(
+    () => DiscountServices.getAllDiscount(currentPage, limitData),
     [currentPage, limitData]
-  )
-
+  );
+const response=useDiscountSubmit()
   const res = useAsync(CustomerServices.getAllCustomers);
   const optionsForCustomer =
     res.data?.map((item) => {
@@ -79,37 +72,36 @@ const UserDiscount = () => {
       return obj;
     }) ?? [];
 
-  const { data, loading } = useAsync(() =>
-    ProductServices.getAllProducts({
-      page: currentPage,
-      limit: limitData,
-      category: category,
-      title: searchText,
-      price: sortedField,
-    }),
+  const { data, loading } = useAsync(
+    () =>
+      ProductServices.getAllProducts({
+        page: currentPage,
+        limit: limitData,
+        category: category,
+        title: searchText,
+        price: sortedField,
+      }),
     []
   );
   const products = data?.products;
   const optionsForProducts = Array.isArray(products)
     ? products.map(({ _id, slug }) => {
-      const object = {
-        namee: slug,
-        _id: _id,
-      };
-      return object;
-    })
+        const object = {
+          namee: slug,
+          _id: _id,
+        };
+        return object;
+      })
     : [];
-
+    const { title, serviceId, handleModalOpen, handleUpdate } = useToggleDrawer();
 
   return (
-
     <>
       <PageTitle>{t("Discount Page")}</PageTitle>
-      <DeleteModal
-      />
+      <DeleteModal disId={serviceId} />
       <BulkActionDrawer title="Discount" />
-      <MainDrawer >
-        <DiscountDrawer id={serviceId} />
+      <MainDrawer>
+        <DiscountDrawer id={serviceId}/>
       </MainDrawer>
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
         <CardBody className="">
@@ -120,12 +112,12 @@ const UserDiscount = () => {
             <div className="flex justify-start xl:w-1/2  md:w-full">
               <UploadManyTwo
                 title="Products"
-              // filename={filename}
-              // isDisabled={isDisabled}
-              // totalDoc={data?.totalDoc}
-              // handleSelectFile={handleSelectFile}
-              // handleUploadMultiple={handleUploadMultiple}
-              // handleRemoveSelectFile={handleRemoveSelectFile}
+                // filename={filename}
+                // isDisabled={isDisabled}
+                // totalDoc={data?.totalDoc}
+                // handleSelectFile={handleSelectFile}
+                // handleUploadMultiple={handleUploadMultiple}
+                // handleRemoveSelectFile={handleRemoveSelectFile}
               />
             </div>
             <div className="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start flex-grow-0">
@@ -221,9 +213,10 @@ const UserDiscount = () => {
         </CardBody>
       </Card>
 
-      {loading ?
+      {loading ? (
         <TableLoading row={12} col={7} width={160} height={20} />
-        : resp?.data?.length !== 0 && (
+      ) : (
+        resp?.data?.length !== 0 && (
           <TableContainer className="mb-8 rounded-b-lg">
             <Table>
               <TableHeader>
@@ -233,23 +226,16 @@ const UserDiscount = () => {
                       type="checkbox"
                       name="selectAll"
                       id="selectAll"
-                    // isChecked={isCheckAll}
-                    // handleClick={handleSelectAll}
+                      // isChecked={isCheckAll}
+                      // handleClick={handleSelectAll}
                     />
                   </TableCell>
                   <TableCell>Customer Email</TableCell>
                   <TableCell>Product Name</TableCell>
-                  <TableCell > Discount</TableCell>
+                  <TableCell> Discount</TableCell>
                 </tr>
               </TableHeader>
-              <DiscountTable
-                data={resp.data}
-              // lang={lang}
-              // isCheck={isCheck}
-              // products={data?.products}
-              // setIsCheck={setIsCheck}
-              // currency={currency}
-              />
+              <DiscountTable data={resp.data} />
             </Table>
             <TableFooter>
               <Pagination
@@ -260,14 +246,15 @@ const UserDiscount = () => {
               />
             </TableFooter>
           </TableContainer>
-        )}
+        )
+      )}
 
-      {!loading && data.length === 0 && <NotFound title="Discount page not found" />}
+      {!loading && data.length === 0 && (
+        <NotFound title="Discount page not found" />
+      )}
       {/* <NotFound title="Product" /> */}
-
     </>
   );
 };
-
 
 export default UserDiscount;
