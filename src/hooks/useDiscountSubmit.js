@@ -269,13 +269,13 @@ const useDiscountSubmit = (id, data) => {
   } = useForm();
 
   useEffect(() => {
-    // if (!isDrawerOpen) {
-    //   setResData({});
-    //   setEmail(data?.customers || []);
-    //   setName(data?.products || []);
-    //   setDiscount(data?.discountPrice || 0);
-    //   return;
-    // }
+    if (!isDrawerOpen) {
+      setResData({});
+      setEmail(data?.customers || []);
+      setName(data?.products || []);
+      setDiscount(data?.discountPrice || 0);
+      return;
+    }
 
     if (id && isDrawerOpen) {
       (async () => {
@@ -317,7 +317,7 @@ const useDiscountSubmit = (id, data) => {
       };
 
       if (id) {
-        const res = await DiscountServices.updateDiscount(id, discountData);
+        const res = await DiscountServices.updateDiscount(id, discountData);     
         setIsUpdate(true);
         setIsSubmitting(false);
         notifySuccess(res.message);
@@ -370,9 +370,7 @@ const useDiscountSubmit = (id, data) => {
       setDiscount("");
     }
   };
-  console.log("email:::2222", email)
-  console.log("discount:::2222", discount)
-  console.log("name:::2222", name)
+  
   return {
     register,
     handleSubmit,

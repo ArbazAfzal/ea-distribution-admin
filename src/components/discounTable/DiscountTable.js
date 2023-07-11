@@ -182,12 +182,12 @@ const DiscountTable = ({ products, isCheck, setIsCheck, currency, lang, data }) 
           data?.discounts?.map((dis, i) => (
             <TableRow key={i + 1}>
               <TableCell>
-                {/* <CheckBox
+                <CheckBox
                   type="checkbox"
-                  id={dis._id}
-                  checked={isCheck.includes(dis._id)}
-                  onChange={handleClick}
-                /> */}
+                  // id={dis._id}
+                  // checked={isCheck.includes(dis._id)}
+                  // onChange={handleClick}
+                />
               </TableCell>
               <TableCell>
                 <span className="text-sm">{dis?.customers?.[0]?.name}</span>
@@ -200,7 +200,7 @@ const DiscountTable = ({ products, isCheck, setIsCheck, currency, lang, data }) 
               </TableCell>
               <TableCell>
                 <EditDeleteButton
-                  id={dis._id}
+                  id={dis._id}               
                   title={dis.title}
                   handleModalOpen={handleModalOpen}
                   isCheck={isCheck}

@@ -55,13 +55,20 @@ const UserDiscount = () => {
     sortedField,
     setSortedField,
     limitData,
+    searchCustomerName,
+    searchCustomerRef,
+    setSearchCustomerName
+    
   } = useContext(SidebarContext);
 
-  const resp = useAsync(
-    () => DiscountServices.getAllDiscount(currentPage, limitData),
-    [currentPage, limitData]
-  );
-const response=useDiscountSubmit()
+
+  const { allId, handleUpdateMany, handleDeleteMany, serviceId } = useToggleDrawer();
+  console.log(serviceId, "----------------------------------")
+  const resp = useAsync(() =>
+    DiscountServices.getAllDiscount(currentPage, limitData, searchText, sortedField,searchCustomerName),
+    [currentPage, limitData, searchText, sortedField,searchCustomerName]
+  )
+
   const res = useAsync(CustomerServices.getAllCustomers);
   const optionsForCustomer =
     res.data?.map((item) => {
@@ -93,7 +100,7 @@ const response=useDiscountSubmit()
         return object;
       })
     : [];
-    const { title, serviceId, handleModalOpen, handleUpdate } = useToggleDrawer();
+    
 
   return (
     <>
@@ -169,6 +176,22 @@ const response=useDiscountSubmit()
             onSubmit={handleSubmitForAll}
             className="py-3 grid gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex"
           >
+
+            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
+              <Input
+                ref={searchCustomerRef}
+                className="border h-12 text-sm focus:outline-none block w-full bg-gray-100 border-transparent focus:bg-white"
+                type="search"
+                name="search"
+                placeholder={t("Customer Name")}
+           
+                
+              />
+              <button
+                type="submit"
+                className="absolute right-0 top-0 mt-5 mr-1"
+              ></button>
+            </div>
             <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
               <Input
                 ref={searchRef}
@@ -184,10 +207,6 @@ const response=useDiscountSubmit()
             </div>
 
             <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
-              {/* <SelectCategory setCategory={setCategory} lang={lang} /> */}
-            </div>
-
-            <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
               <Select
                 onChange={(e) => setSortedField(e.target.value)}
                 className="border h-12 text-sm focus:outline-none block w-full bg-gray-100 border-transparent focus:bg-white"
@@ -197,10 +216,6 @@ const response=useDiscountSubmit()
                 </option>
                 <option value="low">{t("LowtoHigh")}</option>
                 <option value="high">{t("HightoLow")}</option>
-                <option value="published">{t("Published")}</option>
-                <option value="unPublished">{t("Unpublished")}</option>
-                <option value="status-selling">{t("StatusSelling")}</option>
-                <option value="status-out-of-stock">{t("StatusStock")}</option>
                 <option value="date-added-asc">{t("DateAddedAsc")}</option>
                 <option value="date-added-desc">{t("DateAddedDesc")}</option>
                 <option value="date-updated-asc">{t("DateUpdatedAsc")}</option>

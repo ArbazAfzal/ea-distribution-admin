@@ -1,8 +1,11 @@
 import requests from "./httpService";
 
 const DiscountServices = {
-  getAllDiscount: async ( page, limit) => {
-    return requests.get(`/discount?page=${page}&limit=${limit}`);
+  getAllDiscount: async ( page, limit,title, price,customerName) => {
+    const searchTitle = title !== null ? title : "";
+    const searchPrice = price !== null ? price : "";
+    const searchCustomerName = customerName !== null ? customerName : "";
+    return requests.get(`/discount?page=${page}&limit=${limit}&title=${searchTitle}&price=${searchPrice}&customerName=${searchCustomerName}`);
   },
 
   addDiscount: async (body) => {
