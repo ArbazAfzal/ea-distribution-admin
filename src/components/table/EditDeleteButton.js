@@ -231,7 +231,7 @@ const EditDeleteButton = ({
         ) : (
           <button
             disabled={isCheck?.length > 0}
-            onClick={() => handleUpdateDiscount(id)} // Use handleUpdateDiscount for updating discounts
+            onClick={() => handleUpdate(id)} // Use handleUpdateDiscount for updating discounts
             className="p-2 cursor-pointer text-gray-400 hover:text-green-600 focus:outline-none"
           >
             <Tooltip

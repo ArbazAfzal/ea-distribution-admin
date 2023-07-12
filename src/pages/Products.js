@@ -37,7 +37,7 @@ import SettingServices from "services/SettingServices";
 const Products = () => {
   const { title, allId, serviceId, handleDeleteMany, handleUpdateMany } =
     useToggleDrawer();
-
+console.log(serviceId,"product")
   const { t } = useTranslation();
   const {
     toggleDrawer,

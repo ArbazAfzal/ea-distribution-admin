@@ -32,7 +32,7 @@ import SelectCategory from "components/form/SelectCategory";
 import MainDrawer from "components/drawer/MainDrawer";
 import ProductDrawer from "components/drawer/ProductDrawer";
 import CheckBox from "components/form/CheckBox";
-import useProductFilter from "hooks/useProductFilter";
+
 import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
 import DeleteModal from "components/modal/DeleteModal";
 import BulkActionDrawer from "components/drawer/BulkActionDrawer";
@@ -41,7 +41,19 @@ import SettingServices from "services/SettingServices";
 import DiscountTable from "components/discounTable/DiscountTable";
 import DiscountDrawer from "components/drawer/DiscountDrawer";
 import useDiscountSubmit from "hooks/useDiscountSubmit";
+import { useTranslation } from "react-i18next";
 const UserDiscount = () => {
+  const { title, allId, serviceId, handleDeleteMany, handleUpdateMany } =
+    useToggleDrawer();
+  const [userdicountid, setUserDiscountId] = useState()
+  console.log(serviceId, "arbaz malik")
+
+  useEffect(() => {
+    setUserDiscountId(serviceId)
+    console.log(serviceId, "users")
+  }, [serviceId])
+
+  const { t } = useTranslation();
   const {
     toggleDrawer,
     lang,
@@ -58,15 +70,17 @@ const UserDiscount = () => {
     searchCustomerName,
     searchCustomerRef,
     setSearchCustomerName
-    
+
   } = useContext(SidebarContext);
-
-
-  const { allId, handleUpdateMany, handleDeleteMany, serviceId } = useToggleDrawer();
-  console.log(serviceId, "----------------------------------")
+  const {
+    id,
+    resData
+  } = useDiscountSubmit()
+console.log(resData,id,"useDiscount=====================");
+  const { data: globalSetting } = useAsync(SettingServices.getGlobalSetting);
   const resp = useAsync(() =>
-    DiscountServices.getAllDiscount(currentPage, limitData, searchText, sortedField,searchCustomerName),
-    [currentPage, limitData, searchText, sortedField,searchCustomerName]
+    DiscountServices.getAllDiscount(currentPage, limitData, searchText, sortedField, searchCustomerName),
+    [currentPage, limitData, searchText, sortedField, searchCustomerName]
   )
 
   const res = useAsync(CustomerServices.getAllCustomers);
@@ -93,14 +107,14 @@ const UserDiscount = () => {
   const products = data?.products;
   const optionsForProducts = Array.isArray(products)
     ? products.map(({ _id, slug }) => {
-        const object = {
-          namee: slug,
-          _id: _id,
-        };
-        return object;
-      })
+      const object = {
+        namee: slug,
+        _id: _id,
+      };
+      return object;
+    })
     : [];
-    
+
 
   return (
     <>
@@ -108,7 +122,7 @@ const UserDiscount = () => {
       <DeleteModal disId={serviceId} />
       <BulkActionDrawer title="Discount" />
       <MainDrawer>
-        <DiscountDrawer id={serviceId}/>
+        <DiscountDrawer id={userdicountid} />
       </MainDrawer>
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
         <CardBody className="">
@@ -119,12 +133,12 @@ const UserDiscount = () => {
             <div className="flex justify-start xl:w-1/2  md:w-full">
               <UploadManyTwo
                 title="Products"
-                // filename={filename}
-                // isDisabled={isDisabled}
-                // totalDoc={data?.totalDoc}
-                // handleSelectFile={handleSelectFile}
-                // handleUploadMultiple={handleUploadMultiple}
-                // handleRemoveSelectFile={handleRemoveSelectFile}
+              // filename={filename}
+              // isDisabled={isDisabled}
+              // totalDoc={data?.totalDoc}
+              // handleSelectFile={handleSelectFile}
+              // handleUploadMultiple={handleUploadMultiple}
+              // handleRemoveSelectFile={handleRemoveSelectFile}
               />
             </div>
             <div className="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start flex-grow-0">
@@ -184,8 +198,8 @@ const UserDiscount = () => {
                 type="search"
                 name="search"
                 placeholder={t("Customer Name")}
-           
-                
+
+
               />
               <button
                 type="submit"
@@ -241,8 +255,8 @@ const UserDiscount = () => {
                       type="checkbox"
                       name="selectAll"
                       id="selectAll"
-                      // isChecked={isCheckAll}
-                      // handleClick={handleSelectAll}
+                    // isChecked={isCheckAll}
+                    // handleClick={handleSelectAll}
                     />
                   </TableCell>
                   <TableCell>Customer Email</TableCell>

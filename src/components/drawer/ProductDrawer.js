@@ -40,8 +40,6 @@ import CustomerServices from "services/CustomerServices";
 
 const ProductDrawer = ({ id }) => {
   const { t } = useTranslation();
-  
- 
  
   const {
     tag,
