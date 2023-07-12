@@ -53,9 +53,7 @@ const UserDiscount = () => {
   useEffect(async() => {
     setUserDiscountId(serviceId)
     console.log(serviceId, "users")
-    const resdis =await  DiscountServices.getDiscountById("64a6c30024d81900085eaac4");
-    console.log("🚀 ~ file: UserDiscount.js:119 ~ UserDiscount ~ resdis:", resdis)
-setId(resdis)
+ 
   }, [serviceId])
 
   const { t } = useTranslation();
@@ -77,11 +75,8 @@ setId(resdis)
     setSearchCustomerName
 
   } = useContext(SidebarContext);
-  const {
-    id,
-    resData
-  } = useDiscountSubmit()
-console.log(resData,id,"useDiscount=====================");
+
+
   const { data: globalSetting } = useAsync(SettingServices.getGlobalSetting);
   const resp = useAsync(() =>
     DiscountServices.getAllDiscount(currentPage, limitData, searchText, sortedField, searchCustomerName),
@@ -132,7 +127,7 @@ const ID=useSelector((state)=>state.id)
       <DeleteModal disId={ID} />
       <BulkActionDrawer title="Discount" />
       <MainDrawer>
-        <DiscountDrawer id={ID} disdata={Id} click={con} />
+        <DiscountDrawer id={ID} disdata={Id} />
       </MainDrawer>
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
         <CardBody className="">

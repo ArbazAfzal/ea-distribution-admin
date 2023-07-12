@@ -58,7 +58,7 @@ console.log(resData,"table")
 
       {/* {isCheck?.length < 2 && (
         <MainDrawer>
-          <DiscountDrawer id={id} disdata={resData} />
+          <DiscountDrawer id={serviceId} disdata={data.discounts} />
         </MainDrawer>
       )} */}
 
@@ -85,7 +85,8 @@ console.log(resData,"table")
               </TableCell>
               <TableCell>
                 <EditDeleteButton
-                  id={dis._id}               
+                  id={dis._id} 
+                  disdata={resData}              
                   title={dis.title}
                   handleModalOpen={handleModalOpen}
                   isCheck={isCheck}

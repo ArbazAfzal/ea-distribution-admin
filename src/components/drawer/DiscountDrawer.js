@@ -12,8 +12,9 @@ import DrawerButton from "components/form/DrawerButton";
 import useDiscountSubmit from "hooks/useDiscountSubmit";
 import { t } from "i18next";
 import useAsync from "hooks/useAsync";
+import { useTranslation } from "react-i18next";
 
-const DiscountDrawer = ({id, disdata,click}) => {
+const DiscountDrawer = ({id}) => {
   const {
     toggleDrawer,
     lang,
@@ -48,11 +49,8 @@ const DiscountDrawer = ({id, disdata,click}) => {
     setDiscount,
     // handleSubmit,
     setName,
-  } = useDiscountSubmit(id,disdata);
-  console.log(disdata, id, "table wala");
-  console.log("============", email);
-  console.log("discount:::", discount);
-  console.log("name:::", name);
+  } = useDiscountSubmit(id);
+
   const res = useAsync(CustomerServices.getAllCustomers);
   const optionsForCustomer =
     res.data?.map((item) => ({
@@ -100,7 +98,7 @@ const DiscountDrawer = ({id, disdata,click}) => {
     };
     const res = await DiscountServices.addDiscount(discountData);
   };
-console.log("🚀 ~ file: DiscountDrawer.js:18 ~ id,data:", disdata)
+console.log("🚀 ~ file: DiscountDrawer.js:18 ~ id,data:", id)
 
   return (
     <>
@@ -187,7 +185,7 @@ console.log("🚀 ~ file: DiscountDrawer.js:18 ~ id,data:", disdata)
           <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
             <div className="col-span-8 sm:col-span-4">
               <DrawerButton
-                id={id}
+              id={id}
                 title="Discount"
                 isSubmitting={isSubmitting}
               />

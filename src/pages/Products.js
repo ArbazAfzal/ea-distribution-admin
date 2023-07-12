@@ -33,6 +33,7 @@ import DeleteModal from "components/modal/DeleteModal";
 import BulkActionDrawer from "components/drawer/BulkActionDrawer";
 import TableLoading from "components/preloader/TableLoading";
 import SettingServices from "services/SettingServices";
+import DiscountDrawer from "components/drawer/DiscountDrawer";
 
 const Products = () => {
   const { title, allId, serviceId, handleDeleteMany, handleUpdateMany } =
@@ -97,7 +98,7 @@ console.log(serviceId,"product")
       <DeleteModal ids={allId} setIsCheck={setIsCheck} title={title} />
       <BulkActionDrawer ids={allId} title="Products" />
       <MainDrawer>
-        <ProductDrawer id={serviceId} />
+        <DiscountDrawer id={serviceId} />
       </MainDrawer>
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
         <CardBody className="">

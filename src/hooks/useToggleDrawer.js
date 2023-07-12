@@ -34,6 +34,7 @@ const useToggleDrawer = () => {
 
   useEffect(() => {
     if (!isDrawerOpen) {
+      dispatch(setID(""))
       setServiceId();
     }
   }, [isDrawerOpen]);
