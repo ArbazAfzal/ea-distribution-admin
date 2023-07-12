@@ -1,3 +1,4 @@
+import { use } from "i18next";
 import Cookies from "js-cookie";
 import { createContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,8 +9,10 @@ export const SidebarContext = createContext();
 export const SidebarProvider = ({ children }) => {
   const resultsPerPage = 20;
   const searchRef = useRef("");
-  const invoiceRef = useRef("");
+  const searchCustomerRef = useRef("");
 
+  const invoiceRef = useRef("");
+const [searchCustomerName,setSearchCustomerName]=useState(null)
   const [limitData, setLimitData] = useState(20);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -58,9 +61,16 @@ export const SidebarProvider = ({ children }) => {
 
   const handleSubmitForAll = (e) => {
     e.preventDefault();
-    if (!searchRef?.current?.value) return setSearchText(null);
+    if (!searchRef?.current?.value){  return setSearchText(null)  }
+    //  else if(!searchCustomerRef?.current?.value){
+    //  return setSearchCustomerName(null) || setSearchCustomerName(searchCustomerRef?.current?.value);;
+      
+    // }
+    
     setSearchText(searchRef?.current?.value);
     setCategory(null);
+  
+
   };
 
   useEffect(() => {
@@ -124,6 +134,7 @@ export const SidebarProvider = ({ children }) => {
         category,
         setCategory,
         searchRef,
+        searchCustomerRef,
         handleSubmitForAll,
         status,
         setStatus,
@@ -152,6 +163,9 @@ export const SidebarProvider = ({ children }) => {
         navBar,
         tabIndex,
         setTabIndex,
+        searchCustomerName,
+        setSearchCustomerName
+
       }}
     >
       {children}

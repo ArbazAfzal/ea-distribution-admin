@@ -3,10 +3,12 @@ import thunk from "redux-thunk";
 
 import { settingReducers } from "./Reducers/SettingReducers";
 import { addToSideBarMenuReducer } from "./Reducers/SideBarMenuReducers";
+import SettingId from "./Reducers/SettingId";
 
 const reducer = combineReducers({
   addToSideBar: addToSideBarMenuReducer,
   setting: settingReducers,
+    id:SettingId
 });
 
 const initialState = {
@@ -21,6 +23,7 @@ const initialState = {
       ? JSON.parse(localStorage.getItem("_settingItem"))
       : [],
   },
+  id:null
 };
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -42,7 +42,6 @@ const ProductDrawer = ({ id }) => {
   const { t } = useTranslation();
   
  
- 
   const {
     tag,
     setTag,

@@ -28,3 +28,9 @@ export const emptySideBarMenu = () => async (dispatch, getState) => {
     JSON.stringify(getState().addToSideBar.sideBarAdd)
   );
 };
+export const setID = (id) => {
+  return {
+    type: 'SET_ID',
+    payload: id
+  };
+};

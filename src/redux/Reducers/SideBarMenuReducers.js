@@ -30,6 +30,7 @@ export const addToSideBarMenuReducer = (
         ...state,
         sideBarAdd: null,
       };
+      
 
     default:
       return state;
