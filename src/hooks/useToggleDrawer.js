@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { SidebarContext } from "context/SidebarContext";
+import { useDispatch, useSelector } from "react-redux";
+import { setID } from "redux/Actions/SettingActions";
 
 
 const useToggleDrawer = () => {
@@ -8,12 +10,15 @@ const useToggleDrawer = () => {
   const [title, setTitle] = useState("");
   const { toggleDrawer, isDrawerOpen, toggleModal, toggleBulkDrawer, } =
     useContext(SidebarContext);
-
+    const id = useSelector((state) => state.id);
+    const dispatch = useDispatch();
   const handleUpdate = (id) => {
     setServiceId(id);
     toggleDrawer();
+    dispatch(setID(id));
+
   };
-  console.log(serviceId,'arbaz')
+
 
   const handleUpdateMany = (id) => {
     setAllId(id);
@@ -24,6 +29,7 @@ const useToggleDrawer = () => {
     setServiceId(id);
     toggleModal(id);
     setTitle(title);
+
   };
 
   useEffect(() => {

@@ -42,15 +42,20 @@ import DiscountTable from "components/discounTable/DiscountTable";
 import DiscountDrawer from "components/drawer/DiscountDrawer";
 import useDiscountSubmit from "hooks/useDiscountSubmit";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 const UserDiscount = () => {
   const { title, allId, serviceId, handleDeleteMany, handleUpdateMany } =
     useToggleDrawer();
   const [userdicountid, setUserDiscountId] = useState()
-  console.log(serviceId, "arbaz malik")
+  const [Id, setId] = useState()
+  console.log(Id, "arbaz malik")
 
-  useEffect(() => {
+  useEffect(async() => {
     setUserDiscountId(serviceId)
     console.log(serviceId, "users")
+    const resdis =await  DiscountServices.getDiscountById("64a6c30024d81900085eaac4");
+    console.log("🚀 ~ file: UserDiscount.js:119 ~ UserDiscount ~ resdis:", resdis)
+setId(resdis)
   }, [serviceId])
 
   const { t } = useTranslation();
@@ -115,14 +120,19 @@ console.log(resData,id,"useDiscount=====================");
     })
     : [];
 
-
-  return (
+   const [con,setCon]=useState(false)
+   const click=()=>{
+     setCon(true)
+    }
+const ID=useSelector((state)=>state.id)
+    console.log("🚀 ~ file: UserDiscount.js:128 ~ UserDiscount ~ ID:", ID)
+    return (
     <>
       <PageTitle>{t("Discount Page")}</PageTitle>
-      <DeleteModal disId={serviceId} />
+      <DeleteModal disId={ID} />
       <BulkActionDrawer title="Discount" />
       <MainDrawer>
-        <DiscountDrawer id={userdicountid} />
+        <DiscountDrawer id={ID} disdata={Id} click={con} />
       </MainDrawer>
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
         <CardBody className="">
@@ -264,7 +274,7 @@ console.log(resData,id,"useDiscount=====================");
                   <TableCell> Discount</TableCell>
                 </tr>
               </TableHeader>
-              <DiscountTable data={resp.data} />
+              <DiscountTable click={()=>click()} data={resp.data} />
             </Table>
             <TableFooter>
               <Pagination

@@ -22,7 +22,7 @@ import { notifyError, notifySuccess } from "utils/toast";
 import DiscountServices from "services/DiscountServices";
 
 const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId,disId }) => {
-  console.log("", disId)
+  console.log("🚀 ~ file: DeleteModal.js:25 ~ DeleteModal ~ disId:", disId)
   const { isModalOpen, closeModal, setIsUpdate } = useContext(SidebarContext);
   const { setServiceId } = useToggleDrawer();
   const location = useLocation();

@@ -1,4 +1,3 @@
-
 import { useState, useContext, useEffect } from "react";
 import { SidebarContext } from "context/SidebarContext";
 import LabelArea from "components/form/LabelArea";
@@ -6,15 +5,15 @@ import Multiselect from "multiselect-react-dropdown";
 import CustomerServices from "services/CustomerServices";
 import ProductServices from "services/ProductServices";
 import DiscountServices from "services/DiscountServices";
-import { notifyError, notifySuccess } from 'utils/toast';
-import Title from 'components/form/Title';
+import { notifyError, notifySuccess } from "utils/toast";
+import Title from "components/form/Title";
 import { Scrollbars } from "react-custom-scrollbars-2";
-import DrawerButton from 'components/form/DrawerButton';
-import useDiscountSubmit from 'hooks/useDiscountSubmit';
+import DrawerButton from "components/form/DrawerButton";
+import useDiscountSubmit from "hooks/useDiscountSubmit";
 import { t } from "i18next";
 import useAsync from "hooks/useAsync";
 
-const  DiscountDrawer=(id,disdata)=> {
+const DiscountDrawer = ({id, disdata,click}) => {
   const {
     toggleDrawer,
     lang,
@@ -49,42 +48,46 @@ const  DiscountDrawer=(id,disdata)=> {
     setDiscount,
     // handleSubmit,
     setName,
-  }
-    = useDiscountSubmit(id);
-console.log(disdata,id,"table wala")
-  console.log("============", email)
-  console.log("discount:::", discount)
-  console.log("name:::", name)
+  } = useDiscountSubmit(id,disdata);
+  console.log(disdata, id, "table wala");
+  console.log("============", email);
+  console.log("discount:::", discount);
+  console.log("name:::", name);
   const res = useAsync(CustomerServices.getAllCustomers);
   const optionsForCustomer =
     res.data?.map((item) => ({
       name: item.email,
       _id: item._id,
     })) ?? [];
-  useEffect(() => { }, [discount])
-  const { data, loading } = useAsync(() =>
-    ProductServices.getAllProducts({
-      page: currentPage,
-      limit: limitData,
-      category: category,
-      title: searchText,
-      price: sortedField,
-    }),
+  useEffect(() => {}, [discount]);
+  const { data, loading } = useAsync(
+    () =>
+      ProductServices.getAllProducts({
+        page: currentPage,
+        limit: limitData,
+        category: category,
+        title: searchText,
+        price: sortedField,
+      }),
     []
   );
   const products = data?.products;
   const optionsForProducts = Array.isArray(products)
     ? products.map(({ _id, slug }) => ({
-      namee: slug,
-      _id: _id,
-    }))
+        namee: slug,
+        _id: _id,
+      }))
     : [];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const selectedCustomerIds = email.map((item) => item._id);
     const selectedProductIds = name.map((item) => item._id);
-    if (selectedCustomerIds.length === 0 || selectedProductIds.length === 0 || discount === 0) {
+    if (
+      selectedCustomerIds.length === 0 ||
+      selectedProductIds.length === 0 ||
+      discount === 0
+    ) {
       notifyError("All fields are required!");
       return;
     } else {
@@ -96,24 +99,21 @@ console.log(disdata,id,"table wala")
       discountPrice: discount,
     };
     const res = await DiscountServices.addDiscount(discountData);
-
   };
+console.log("🚀 ~ file: DiscountDrawer.js:18 ~ id,data:", disdata)
 
   return (
     <>
-
       <div className="w-full relative p-6 border-b border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
         {id ? (
           <Title
             register={register}
-
-            title={t("UpdateDiscount")}
-            description={t("UpdateDiscountDescription")}
+            title={t("DrawerUpdateDiscount")}
+            description={t("UpdateDiscount")}
           />
         ) : (
           <Title
             register={register}
-
             title={t("DrawerAddDiscount")}
             description={t("AddDiscount")}
           />
@@ -129,9 +129,9 @@ console.log(disdata,id,"table wala")
                 isObject={true}
                 singleSelect={false}
                 hidePlaceholder={false}
-                onKeyPressFn={function noRefCheck() { }}
+                onKeyPressFn={function noRefCheck() {}}
                 onRemove={handleCustomerRemove}
-                onSearch={function noRefCheck() { }}
+                onSearch={function noRefCheck() {}}
                 onSelect={handleCustomerSelect}
                 selectedValues={email}
                 options={optionsForCustomer}
@@ -147,9 +147,9 @@ console.log(disdata,id,"table wala")
                 isObject={true}
                 singleSelect={false}
                 hidePlaceholder={false}
-                onKeyPressFn={function noRefCheck() { }}
+                onKeyPressFn={function noRefCheck() {}}
                 onRemove={handleProductRemove}
-                onSearch={function noRefCheck() { }}
+                onSearch={function noRefCheck() {}}
                 onSelect={handleProductSelect}
                 selectedValues={name}
                 options={optionsForProducts}
@@ -186,13 +186,17 @@ console.log(disdata,id,"table wala")
           </div>
           <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
             <div className="col-span-8 sm:col-span-4">
-              <DrawerButton id={id} title="Discount"  isSubmitting={isSubmitting} />
+              <DrawerButton
+                id={id}
+                title="Discount"
+                isSubmitting={isSubmitting}
+              />
             </div>
           </div>
-        </form> 
+        </form>
       </Scrollbars>
     </>
   );
-}
+};
 
-export default DiscountDrawer
+export default DiscountDrawer;

@@ -28,3 +28,9 @@ export const emptySetting = () => (dispatch, getState) => {
     JSON.stringify(getState().setting.settingItem)
   );
 };
+export const setID = (id) => {
+  return {
+    type: 'SET_ID',
+    payload: id
+  };
+};

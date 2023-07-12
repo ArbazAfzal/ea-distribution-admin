@@ -17,10 +17,10 @@ import DiscountDrawer from "components/drawer/DiscountDrawer";
 import useDiscountSubmit from "hooks/useDiscountSubmit";
 import { notifySuccess } from "utils/toast";
 
-const DiscountTable = ({ products, isCheck, setIsCheck, currency, lang, data }) => {
+const DiscountTable = ({ products, isCheck, setIsCheck, currency, lang, data ,click}) => {
   const [selectedDiscount, setSelectedDiscount] = useState(null);
   const { title, itemId, handleModalOpen, handleUpdate, isSubmitting, serviceId } = useToggleDrawer();
-  const { register, handleSubmit, onSubmit, errors, checked, setChecked,resData } = useDiscountSubmit(serviceId, selectedDiscount);
+  const { register, handleSubmit, onSubmit, errors, checked, setChecked,resData,id } = useDiscountSubmit(serviceId, selectedDiscount);
 
 console.log(resData,"table")
   const handleClick = (e) => {
@@ -36,10 +36,9 @@ console.log(resData,"table")
   };
 
   const handleUpdateDiscount = async (id) => {
-    const discount = data.discounts.find((dis) => dis._id === id);
-    setSelectedDiscount(discount);
-    console.log('saboor',id)
+
     handleUpdate(id);
+    click()
   };
 
   const handleDeleteDiscount = async (id) => {
@@ -57,11 +56,11 @@ console.log(resData,"table")
         <DeleteModal disId={serviceId} title={title} handleDelete={handleDeleteDiscount} />
       )}
 
-      {isCheck?.length < 2 && (
+      {/* {isCheck?.length < 2 && (
         <MainDrawer>
-          <DiscountDrawer id={serviceId} disdata={data.discounts} />
+          <DiscountDrawer id={id} disdata={resData} />
         </MainDrawer>
-      )}
+      )} */}
 
       <TableBody>
         {Array.isArray(data?.discounts) &&
@@ -93,7 +92,7 @@ console.log(resData,"table")
                   product={dis}
                   parent={data}
                   handleDelete={handleDeleteDiscount}
-                  handleUpdate={handleUpdate}
+                  handleUpdate={handleUpdateDiscount}
                 />
               </TableCell>
             </TableRow>
