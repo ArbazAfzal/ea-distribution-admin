@@ -16,6 +16,7 @@ import DiscountServices from "services/DiscountServices";
 import DiscountDrawer from "components/drawer/DiscountDrawer";
 import useDiscountSubmit from "hooks/useDiscountSubmit";
 import { notifySuccess } from "utils/toast";
+import { useSelector } from "react-redux";
 
 const DiscountTable = ({ products, isCheck, setIsCheck, currency, lang, data ,click}) => {
   const [selectedDiscount, setSelectedDiscount] = useState(null);
@@ -49,11 +50,12 @@ console.log(resData,"table")
   };
 
   const resp = useAsync(DiscountServices.getAllDiscount);
-
+  const ID=useSelector((state)=>state.id)
+  console.log("🚀 ~ file: UserDiscount.js:128 ~ UserDiscount ~ ID:", ID)
   return (
     <>
       {isCheck?.length === 1 && (
-        <DeleteModal disId={serviceId} title={title} handleDelete={handleDeleteDiscount} />
+         <DeleteModal id={ID} title={title}  />
       )}
 
       {/* {isCheck?.length < 2 && (

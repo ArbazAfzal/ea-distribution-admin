@@ -50,10 +50,10 @@ const UserDiscount = () => {
   const [Id, setId] = useState()
   console.log(Id, "arbaz malik")
 
-  useEffect(async() => {
+  useEffect(async () => {
     setUserDiscountId(serviceId)
     console.log(serviceId, "users")
- 
+
   }, [serviceId])
 
   const { t } = useTranslation();
@@ -82,10 +82,10 @@ const UserDiscount = () => {
     DiscountServices.getAllDiscount(currentPage, limitData, searchText, sortedField, searchCustomerName),
     [currentPage, limitData, searchText, sortedField, searchCustomerName]
   )
-
+console.log(resp,"getAll")
   const res = useAsync(CustomerServices.getAllCustomers);
   const optionsForCustomer =
-    res.data?.map((item) => {
+    res?.data?.map((item) => {
       const obj = {
         name: item.email,
         _id: item._id,
@@ -115,16 +115,16 @@ const UserDiscount = () => {
     })
     : [];
 
-   const [con,setCon]=useState(false)
-   const click=()=>{
-     setCon(true)
-    }
-const ID=useSelector((state)=>state.id)
-    console.log("🚀 ~ file: UserDiscount.js:128 ~ UserDiscount ~ ID:", ID)
-    return (
+  const [con, setCon] = useState(false)
+  const click = () => {
+    setCon(true)
+  }
+  const ID = useSelector((state) => state.id)
+  console.log("🚀 ~ file: UserDiscount.js:128 ~ UserDiscount ~ ID:", ID)
+  return (
     <>
       <PageTitle>{t("Discount Page")}</PageTitle>
-      <DeleteModal disId={ID} />
+      <DeleteModal id={ID} title={title} />
       <BulkActionDrawer title="Discount" />
       <MainDrawer>
         <DiscountDrawer id={ID} disdata={Id} />
@@ -250,7 +250,7 @@ const ID=useSelector((state)=>state.id)
       {loading ? (
         <TableLoading row={12} col={7} width={160} height={20} />
       ) : (
-        resp?.data?.length !== 0 && (
+        resp?.data?.discounts?.length !== 0 && (
           <TableContainer className="mb-8 rounded-b-lg">
             <Table>
               <TableHeader>
@@ -269,11 +269,11 @@ const ID=useSelector((state)=>state.id)
                   <TableCell> Discount</TableCell>
                 </tr>
               </TableHeader>
-              <DiscountTable click={()=>click()} data={resp.data} />
+              <DiscountTable click={() => click()} data={resp.data} />
             </Table>
             <TableFooter>
               <Pagination
-                totalResults={resp?.totalDoc}
+                totalResults={resp?.data?.discounts?.totalDoc}
                 resultsPerPage={limitData}
                 onChange={handleChangePage}
                 label="Discount page Navigation"
@@ -283,7 +283,7 @@ const ID=useSelector((state)=>state.id)
         )
       )}
 
-      {!loading && data.length === 0 && (
+      {!loading && resp?.data?.discounts?.length === 0 && (
         <NotFound title="Discount page not found" />
       )}
       {/* <NotFound title="Product" /> */}

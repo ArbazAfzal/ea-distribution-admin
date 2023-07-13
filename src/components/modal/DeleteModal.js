@@ -21,8 +21,8 @@ import CurrencyServices from "services/CurrencyServices";
 import { notifyError, notifySuccess } from "utils/toast";
 import DiscountServices from "services/DiscountServices";
 
-const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId,disId }) => {
-  console.log("🚀 ~ file: DeleteModal.js:25 ~ DeleteModal ~ disId:", disId)
+const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId, }) => {
+  console.log("🚀 ~ file: DeleteModal.js:25 ~ DeleteModal ~ disdel:",title, id)
   const { isModalOpen, closeModal, setIsUpdate } = useContext(SidebarContext);
   const { setServiceId } = useToggleDrawer();
   const location = useLocation();
@@ -130,9 +130,8 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId,disId })
         setIsSubmitting(false);
       }
       if (location.pathname === "/userDiscount") {
-        
-        const res = await DiscountServices.deleteDiscount(disId);
-        console.log("🚀 ~ file: DeleteModal.js:133 ~ handleDelete ~ res:", res)
+        const res = await DiscountServices.deleteDiscount(id);
+        console.log("🚀 ~ file: DeleteModal.js:133 ~ handleDelete ~ res:", res,id)
         setIsUpdate(true);
         notifySuccess(res.message);
         setServiceId();
