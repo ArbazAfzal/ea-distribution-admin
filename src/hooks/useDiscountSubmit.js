@@ -85,7 +85,8 @@ const useDiscountSubmit = (id, disdata) => {
         notifySuccess(res.message);
         closeDrawer();
        reset();
-      } else {
+      }
+       else {
         const res = await DiscountServices.addDiscount(discountData);
         setIsUpdate(true);
         setIsSubmitting(false);

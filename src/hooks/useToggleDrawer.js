@@ -29,6 +29,7 @@ const useToggleDrawer = () => {
     setServiceId(id);
     toggleModal(id);
     setTitle(title);
+    dispatch(setID(id));
 
   };
 
