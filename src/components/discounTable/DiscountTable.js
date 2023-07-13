@@ -13,17 +13,15 @@ import EditDeleteButton from "components/table/EditDeleteButton";
 import useToggleDrawer from "hooks/useToggleDrawer";
 import useAsync from "hooks/useAsync";
 import DiscountServices from "services/DiscountServices";
-import DiscountDrawer from "components/drawer/DiscountDrawer";
 import useDiscountSubmit from "hooks/useDiscountSubmit";
 import { notifySuccess } from "utils/toast";
 import { useSelector } from "react-redux";
-
+import { Avatar } from '@windmill/react-ui';
 const DiscountTable = ({ products, isCheck, setIsCheck, currency, lang, data ,click}) => {
-  const [selectedDiscount, setSelectedDiscount] = useState(null);
+  console.log("🚀 ~ file: DiscountTable.js:21 ~ DiscountTable ~ data:", data)
   const { title, itemId, handleModalOpen, handleUpdate, isSubmitting, serviceId } = useToggleDrawer();
-  const { register, handleSubmit, onSubmit, errors, checked, setChecked,resData,id } = useDiscountSubmit(serviceId, selectedDiscount);
+  const { resData} = useDiscountSubmit(serviceId);
 
-console.log(resData,"table")
   const handleClick = (e) => {
     const { id, checked } = e.target;
 
@@ -43,26 +41,17 @@ console.log(resData,"table")
   };
 
   const handleDeleteDiscount = async (id) => {
-    console.log("🚀 ~ file: DiscountTable.js:160 ~ handleDeleteDiscount ~ id:", id)
     await DiscountServices.deleteDiscount(id);
     notifySuccess("Deleted")
-    // setIsCheck((prevIsCheck) => prevIsCheck.filter((item) => item !== id));
   };
 
   const resp = useAsync(DiscountServices.getAllDiscount);
   const ID=useSelector((state)=>state.id)
-  console.log("🚀 ~ file: UserDiscount.js:128 ~ UserDiscount ~ ID:", ID)
   return (
     <>
       {isCheck?.length === 1 && (
          <DeleteModal id={ID} title={title}  />
       )}
-
-      {/* {isCheck?.length < 2 && (
-        <MainDrawer>
-          <DiscountDrawer id={serviceId} disdata={data.discounts} />
-        </MainDrawer>
-      )} */}
 
       <TableBody>
         {Array.isArray(data?.discounts) &&
@@ -77,7 +66,12 @@ console.log(resData,"table")
                 />
               </TableCell>
               <TableCell>
-                <span className="text-sm">{dis?.customers?.[0]?.name}</span>
+                <span className="text-sm">{dis?.customers?.map((i)=>
+                    <Avatar className="bg-indigo-500 ">
+                    {i}
+                  </Avatar>
+                
+                )}</span>
               </TableCell>
               <TableCell>
                 <span className="text-sm">{dis?.products?.[0]?.title?.en}</span>

@@ -1,11 +1,7 @@
-import { useState, useEffect } from "react";
-import LabelArea from "components/form/LabelArea";
+import { useState} from "react";
 import { SidebarContext } from "context/SidebarContext";
 import useAsync from "hooks/useAsync";
-import { t } from "i18next";
-import Multiselect from "multiselect-react-dropdown";
 import React, { useContext } from "react";
-import CustomerServices from "services/CustomerServices";
 import ProductServices from "services/ProductServices";
 import DiscountServices from "services/DiscountServices";
 import {
@@ -27,35 +23,21 @@ import useToggleDrawer from "hooks/useToggleDrawer";
 import UploadManyTwo from "components/common/UploadManyTwo";
 import NotFound from "components/table/NotFound";
 
-import ProductTable from "components/product/ProductTable";
-import SelectCategory from "components/form/SelectCategory";
 import MainDrawer from "components/drawer/MainDrawer";
-import ProductDrawer from "components/drawer/ProductDrawer";
 import CheckBox from "components/form/CheckBox";
 
 import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
 import DeleteModal from "components/modal/DeleteModal";
 import BulkActionDrawer from "components/drawer/BulkActionDrawer";
 import TableLoading from "components/preloader/TableLoading";
-import SettingServices from "services/SettingServices";
 import DiscountTable from "components/discounTable/DiscountTable";
 import DiscountDrawer from "components/drawer/DiscountDrawer";
-import useDiscountSubmit from "hooks/useDiscountSubmit";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 const UserDiscount = () => {
   const { title, allId, serviceId, handleDeleteMany, handleUpdateMany } =
     useToggleDrawer();
-  const [userdicountid, setUserDiscountId] = useState()
-  const [Id, setId] = useState()
-  console.log(Id, "arbaz malik")
-
-  useEffect(async () => {
-    setUserDiscountId(serviceId)
-    console.log(serviceId, "users")
-
-  }, [serviceId])
-
+  
   const { t } = useTranslation();
   const {
     toggleDrawer,
@@ -77,22 +59,11 @@ const UserDiscount = () => {
   } = useContext(SidebarContext);
 
 
-  const { data: globalSetting } = useAsync(SettingServices.getGlobalSetting);
   const resp = useAsync(() =>
     DiscountServices.getAllDiscount(currentPage, limitData, searchText, sortedField, searchCustomerName),
     [currentPage, limitData, searchText, sortedField, searchCustomerName]
   )
-console.log(resp,"getAll")
-  const res = useAsync(CustomerServices.getAllCustomers);
-  const optionsForCustomer =
-    res?.data?.map((item) => {
-      const obj = {
-        name: item.email,
-        _id: item._id,
-      };
-      return obj;
-    }) ?? [];
-
+ 
   const { data, loading } = useAsync(
     () =>
       ProductServices.getAllProducts({
@@ -104,30 +75,21 @@ console.log(resp,"getAll")
       }),
     []
   );
-  const products = data?.products;
-  const optionsForProducts = Array.isArray(products)
-    ? products.map(({ _id, slug }) => {
-      const object = {
-        namee: slug,
-        _id: _id,
-      };
-      return object;
-    })
-    : [];
+
 
   const [con, setCon] = useState(false)
   const click = () => {
     setCon(true)
   }
   const ID = useSelector((state) => state.id)
-  console.log("🚀 ~ file: UserDiscount.js:128 ~ UserDiscount ~ ID:", ID)
+  
   return (
     <>
       <PageTitle>{t("Discount Page")}</PageTitle>
       <DeleteModal id={ID} title={title} />
       <BulkActionDrawer title="Discount" />
       <MainDrawer>
-        <DiscountDrawer id={ID} disdata={Id} />
+        <DiscountDrawer id={ID}  />
       </MainDrawer>
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
         <CardBody className="">
@@ -286,7 +248,6 @@ console.log(resp,"getAll")
       {!loading && resp?.data?.discounts?.length === 0 && (
         <NotFound title="Discount page not found" />
       )}
-      {/* <NotFound title="Product" /> */}
     </>
   );
 };

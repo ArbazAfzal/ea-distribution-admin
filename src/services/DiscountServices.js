@@ -13,7 +13,7 @@ const DiscountServices = {
   },
 
   updateDiscount: async (id, body) => {
-    return requests.put(`/discount/update/${id}`, body);
+    return requests.patch(`/discount/update/${id}`, body);
   },
 
   deleteDiscount: async (id, body) => {

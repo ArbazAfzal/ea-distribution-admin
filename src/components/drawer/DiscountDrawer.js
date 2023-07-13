@@ -9,12 +9,10 @@ import { notifyError, notifySuccess } from "utils/toast";
 import Title from "components/form/Title";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import DrawerButton from "components/form/DrawerButton";
-import useDiscountSubmit from "hooks/useDiscountSubmit";
 import { t } from "i18next";
 import useAsync from "hooks/useAsync";
-import { useTranslation } from "react-i18next";
 
-const DiscountDrawer = ({id}) => {
+const DiscountDrawer = ({ id }) => {
   const {
     toggleDrawer,
     lang,
@@ -22,34 +20,16 @@ const DiscountDrawer = ({id}) => {
     handleChangePage,
     searchText,
     category,
-    setCategory,
-    searchRef,
-    handleSubmitForAll,
+
     sortedField,
-    setSortedField,
     limitData,
   } = useContext(SidebarContext);
 
-  const {
-    register,
-    onSubmit,
-    errors,
-    email,
-    handleCustomerSelect,
-    handleCustomerRemove,
-    name,
-    handleProductSelect,
-    handleProductRemove,
-    discount,
-    handleAddDiscount,
-    handleSubtractDiscount,
-    handleDiscountChange,
-    isSubmitting,
-    setEmail,
-    setDiscount,
-    // handleSubmit,
-    setName,
-  } = useDiscountSubmit(id);
+  const [email, setEmail] = useState([]);
+  const [name, setName] = useState([]);
+  const [discount, setDiscount] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
 
   const res = useAsync(CustomerServices.getAllCustomers);
   const optionsForCustomer =
@@ -57,7 +37,6 @@ const DiscountDrawer = ({id}) => {
       name: item.email,
       _id: item._id,
     })) ?? [];
-  useEffect(() => {}, [discount]);
   const { data, loading } = useAsync(
     () =>
       ProductServices.getAllProducts({
@@ -69,6 +48,7 @@ const DiscountDrawer = ({id}) => {
       }),
     []
   );
+
   const products = data?.products;
   const optionsForProducts = Array.isArray(products)
     ? products.map(({ _id, slug }) => ({
@@ -77,10 +57,45 @@ const DiscountDrawer = ({id}) => {
       }))
     : [];
 
+  useEffect(() => {
+    if (id) {
+      (async () => {
+        try {
+          const resdis = await DiscountServices.getDiscountById(id);
+
+          if (resdis) {
+            setEmail(
+              resdis.customers?.map((item) => ({
+                name: item.email,
+                _id: item._id,
+              })) ?? []
+            );
+            setName(
+              Array.isArray(resdis.products)
+                ? resdis.products.map(({ _id, slug }) => ({
+                    namee: slug,
+                    _id: _id,
+                  }))
+                : []
+            );
+            setDiscount(resdis.discountPrice);
+          }
+        } catch (err) {
+          // notifyError(err ? err.response.data.message : err.message);
+        }
+      })();
+    } else {
+      setName([]);
+      setEmail([]);
+      setDiscount(0);
+    }
+  }, [id]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const selectedCustomerIds = email.map((item) => item._id);
     const selectedProductIds = name.map((item) => item._id);
+
     if (
       selectedCustomerIds.length === 0 ||
       selectedProductIds.length === 0 ||
@@ -89,29 +104,84 @@ const DiscountDrawer = ({id}) => {
       notifyError("All fields are required!");
       return;
     } else {
-      notifySuccess("Discount added successfully");
+      id
+        ? notifySuccess("Discount Updated successfully")
+        : notifySuccess("Discount added successfully");
     }
+
     const discountData = {
       products: selectedProductIds,
       customers: selectedCustomerIds,
       discountPrice: discount,
     };
-    const res = await DiscountServices.addDiscount(discountData);
+
+    try {
+      setIsSubmitting(true);
+
+      if (id) {
+        const res = await DiscountServices.updateDiscount(id, discountData);
+        setIsUpdate(true);
+        setIsSubmitting(false);
+        notifySuccess(res.message);
+      } else {
+        const res = await DiscountServices.addDiscount(discountData);
+        setIsUpdate(true);
+        setIsSubmitting(false);
+        notifySuccess(res.message);
+      }
+
+      toggleDrawer(); // Close the drawer
+    } catch (err) {
+      setIsSubmitting(false);
+      notifyError(err ? err?.response?.data?.message : err?.message);
+    }
   };
-console.log("🚀 ~ file: DiscountDrawer.js:18 ~ id,data:", id)
+
+  const handleCustomerSelect = (selectedList) => {
+    setEmail(selectedList);
+  };
+
+  const handleCustomerRemove = (removedList) => {
+    setEmail(removedList);
+  };
+
+  const handleProductSelect = (selectedList) => {
+    setName(selectedList);
+  };
+
+  const handleProductRemove = (removedList) => {
+    setName(removedList);
+  };
+
+  const handleAddDiscount = () => {
+    setDiscount((prevDiscount) => prevDiscount + 1);
+  };
+
+  const handleSubtractDiscount = () => {
+    setDiscount((prevDiscount) => prevDiscount - 1);
+  };
+
+  const handleDiscountChange = (e) => {
+    const value = parseInt(e.target.value);
+    if (!isNaN(value)) {
+      setDiscount(value);
+    } else {
+      setDiscount("");
+    }
+  };
 
   return (
     <>
       <div className="w-full relative p-6 border-b border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
         {id ? (
           <Title
-            register={register}
+            register={() => {}}
             title={t("DrawerUpdateDiscount")}
             description={t("UpdateDiscount")}
           />
         ) : (
           <Title
-            register={register}
+            register={() => {}}
             title={t("DrawerAddDiscount")}
             description={t("AddDiscount")}
           />
@@ -127,14 +197,12 @@ console.log("🚀 ~ file: DiscountDrawer.js:18 ~ id,data:", id)
                 isObject={true}
                 singleSelect={false}
                 hidePlaceholder={false}
-                onKeyPressFn={function noRefCheck() {}}
                 onRemove={handleCustomerRemove}
-                onSearch={function noRefCheck() {}}
                 onSelect={handleCustomerSelect}
                 selectedValues={email}
                 options={optionsForCustomer}
-                placeholder={"Customer Email"}
-              ></Multiselect>
+                placeholder={t("Customer Email")}
+              />
             </div>
           </div>
           <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
@@ -145,14 +213,12 @@ console.log("🚀 ~ file: DiscountDrawer.js:18 ~ id,data:", id)
                 isObject={true}
                 singleSelect={false}
                 hidePlaceholder={false}
-                onKeyPressFn={function noRefCheck() {}}
                 onRemove={handleProductRemove}
-                onSearch={function noRefCheck() {}}
                 onSelect={handleProductSelect}
                 selectedValues={name}
                 options={optionsForProducts}
-                placeholder={"Enter product name"}
-              ></Multiselect>
+                placeholder={t("Enter product name")}
+              />
             </div>
           </div>
           <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
@@ -185,7 +251,7 @@ console.log("🚀 ~ file: DiscountDrawer.js:18 ~ id,data:", id)
           <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
             <div className="col-span-8 sm:col-span-4">
               <DrawerButton
-              id={id}
+                id={id}
                 title="Discount"
                 isSubmitting={isSubmitting}
               />
