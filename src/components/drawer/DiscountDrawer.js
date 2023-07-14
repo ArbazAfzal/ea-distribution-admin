@@ -375,8 +375,10 @@ const DiscountDrawer = ({ id }) => {
   //     customers: selectedCustomerIds,
   //     discountPrice: discount,
   //   };
+
   //   try {
   //     setIsSubmitting(true);
+
   //     if (id) {
   //       const res = await DiscountServices.updateDiscount(id, discountData);
   //       setIsUpdate(true);
@@ -393,16 +395,20 @@ const DiscountDrawer = ({ id }) => {
   //       setIsSubmitting(false);
   //       notifySuccess(res.message);
   //     }
+
   //     toggleDrawer(); // Close the drawer
+     
   //   } catch (err) {
   //     setIsSubmitting(false);
   //     notifyError(err ? err?.response?.data?.message : err?.message);
   //   }
+    
   // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const selectedCustomerIds = email.map((item) => item._id);
     const selectedProductIds = name.map((item) => item._id);
+  
     if (
       selectedCustomerIds.length === 0 ||
       selectedProductIds.length === 0 ||
@@ -415,13 +421,16 @@ const DiscountDrawer = ({ id }) => {
         ? notifySuccess("Discount Updated successfully")
         : notifySuccess("Discount added successfully");
     }
+  
     const discountData = {
       products: selectedProductIds,
       customers: selectedCustomerIds,
       discountPrice: discount,
     };
+  
     try {
       setIsSubmitting(true);
+  
       if (id) {
         const res = await DiscountServices.updateDiscount(id, discountData);
         setIsUpdate(true);
@@ -446,17 +455,18 @@ const DiscountDrawer = ({ id }) => {
       } else {
         const res = await DiscountServices.addDiscount(discountData);
         if (res) {
-          const getDiscounts = await DiscountServices.getAllDiscount(
+          const updatedDiscounts = await DiscountServices.getAllDiscount(
             currentPage,
             limitData,
             searchText,
             sortedField,
             searchCustomerName
           );
-          handleChangePage(1);
-          setSearchText('');
-          setSortedField('');
-          setSearchCustomerName('');
+
+          handleChangePage(1); 
+          setSearchText(''); 
+          setSortedField(''); 
+          setSearchCustomerName(''); 
           setName([]);
           setEmail([]);
           setDiscount(0);
@@ -465,14 +475,13 @@ const DiscountDrawer = ({ id }) => {
         setIsSubmitting(false);
         notifySuccess(res.message);
       }
+  
       toggleDrawer(); // Close the drawer
-      const res = 
-      console.log(res,"========");
+  
     } catch (err) {
       setIsSubmitting(false);
       notifyError(err ? err?.response?.data?.message : err?.message);
     }
-    
   };
   
 
