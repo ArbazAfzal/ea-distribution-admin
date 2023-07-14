@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { Avatar } from "@windmill/react-ui";
 
 const DiscountTable = ({
+  
   isCheck,
   setIsCheck,
 
@@ -63,9 +64,9 @@ const DiscountTable = ({
     setCurrentcustomerIndex(index);
   };
   console.log("object::::,", currentcustomerIndex);
-  const handleMouseOverProducts = (productId, i) => {
+  const handleMouseOverProducts = (productId,i) => {
     setHoveredProductId(productId);
-    setCurrentProductIndex(i);
+    setCurrentProductIndex(i)
   };
 
   const handleMouseOut = () => {
@@ -101,7 +102,7 @@ const DiscountTable = ({
                         onMouseOver={() => handleMouseOver(customer._id, i)}
                         onMouseOut={handleMouseOut}
                       >
-                        {customer.name}
+                        {customer.name.charAt(0)}
                       </Avatar>
                       {hoveredCustomerId === customer._id &&
                       currentcustomerIndex == i ? (
@@ -119,17 +120,14 @@ const DiscountTable = ({
                   {dis?.products?.map((product) => (
                     <React.Fragment key={product._id}>
                       <Avatar
-                        onMouseOver={() =>
-                          handleMouseOverProducts(product._id, i)
-                        }
+                        onMouseOver={() => handleMouseOverProducts(product._id,i)}
                         onMouseOut={handleMouseOutProducts}
                       >
                         {product.title.en}
                       </Avatar>
-                      {hoveredProductId === product._id &&
-                        currentProductIndex === i && (
-                          <div>{product.title.en}</div>
-                        )}
+                      {hoveredProductId === product._id && currentProductIndex===i && (
+                        <div>{product.title.en}</div>
+                      )}
                     </React.Fragment>
                   ))}
                 </span>
@@ -159,3 +157,5 @@ const DiscountTable = ({
 };
 
 export default DiscountTable;
+
+
