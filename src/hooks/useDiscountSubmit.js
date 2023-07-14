@@ -6,7 +6,6 @@ import { notifyError, notifySuccess } from "utils/toast";
 import DiscountServices from "services/DiscountServices";
 
 const useDiscountSubmit = (id, disdata) => {
- console.log("🚀 ~ file: useDiscountSubmit.js:252 ~ useDiscountSubmit ~ id:", id,disdata)
  
   const { isDrawerOpen, closeDrawer, setIsUpdate, lang } = useContext(SidebarContext);
   const [resData, setResData] = useState({});
