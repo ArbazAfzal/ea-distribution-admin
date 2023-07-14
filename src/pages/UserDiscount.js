@@ -81,8 +81,7 @@ const UserDiscount = () => {
   const click = () => {
     setCon(true)
   }
-  const ID = useSelector((state) => state.id)
-  
+  const ID = useSelector((state) => state.id);
   return (
     <>
       <PageTitle>{t("Discount Page")}</PageTitle>

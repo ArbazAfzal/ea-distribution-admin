@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { TableBody, TableCell, TableRow } from "@windmill/react-ui";
-import MainDrawer from "components/drawer/MainDrawer";
-import ProductDrawer from "components/drawer/ProductDrawer";
+
 import CheckBox from "components/form/CheckBox";
 import DeleteModal from "components/modal/DeleteModal";
 import EditDeleteButton from "components/table/EditDeleteButton";
@@ -12,22 +11,19 @@ import useDiscountSubmit from "hooks/useDiscountSubmit";
 import { notifySuccess } from "utils/toast";
 import { useSelector } from "react-redux";
 import { Avatar } from "@windmill/react-ui";
+
 const DiscountTable = ({
-  products,
   isCheck,
   setIsCheck,
-  currency,
-  lang,
+
   data,
   click,
 }) => {
-  console.log("🚀 ~ file: DiscountTable.js:21 ~ DiscountTable ~ data:", data);
   const {
     title,
-    itemId,
     handleModalOpen,
     handleUpdate,
-    isSubmitting,
+
     serviceId,
   } = useToggleDrawer();
   const { resData } = useDiscountSubmit(serviceId);
@@ -57,15 +53,28 @@ const DiscountTable = ({
   const resp = useAsync(DiscountServices.getAllDiscount);
   const ID = useSelector((state) => state.id);
 
-  const [isHovering, setIsHovering] = useState(false);
+  const [hoveredCustomerId, setHoveredCustomerId] = useState(null);
+  const [hoveredProductId, setHoveredProductId] = useState(null);
+  const [currentcustomerIndex, setCurrentcustomerIndex] = useState(null);
+  const [currentProductIndex, setCurrentProductIndex] = useState(null);
 
-  const handleMouseOver = () => {
-    setIsHovering(true);
+  const handleMouseOver = (customerId, index) => {
+    setHoveredCustomerId(customerId);
+    setCurrentcustomerIndex(index);
+  };
+  console.log("object::::,", currentcustomerIndex);
+  const handleMouseOverProducts = (productId, i) => {
+    setHoveredProductId(productId);
+    setCurrentProductIndex(i);
   };
 
   const handleMouseOut = () => {
-    setIsHovering(false);
+    setHoveredCustomerId(null);
   };
+  const handleMouseOutProducts = () => {
+    setHoveredProductId(null);
+  };
+
   return (
     <>
       {isCheck?.length === 1 && <DeleteModal id={ID} title={title} />}
@@ -82,29 +91,50 @@ const DiscountTable = ({
                   // onChange={handleClick}
                 />
               </TableCell>
+              {console.log(dis, "---------")}
               <TableCell>
                 <span>
-                  {dis?.customers?.map((i) => (
-                    <Avatar
-                      onMouseOver={handleMouseOver}
-                      onMouseOut={handleMouseOut}
-                      className="bg-indigo-500 "
-                    >
-                      {i}
-                    </Avatar>
-                  ))}
-                  {isHovering && (
-                    <div>
-                      {dis?.customers?.map(
-                        (i) => i?.name
+                  {dis?.customers?.map((customer) => (
+                    <React.Fragment key={customer._id}>
+                      <Avatar
+                        style={{ border: "1px solid red" }}
+                        onMouseOver={() => handleMouseOver(customer._id, i)}
+                        onMouseOut={handleMouseOut}
+                      >
+                        {customer.name}
+                      </Avatar>
+                      {hoveredCustomerId === customer._id &&
+                      currentcustomerIndex == i ? (
+                        <div>{customer.name}</div>
+                      ) : (
+                        ""
                       )}
-                    </div>
-                  )}
+                    </React.Fragment>
+                  ))}
                 </span>
               </TableCell>
+
               <TableCell>
-                <span className="text-sm">{dis?.products?.[0]?.title?.en}</span>
+                <span>
+                  {dis?.products?.map((product) => (
+                    <React.Fragment key={product._id}>
+                      <Avatar
+                        onMouseOver={() =>
+                          handleMouseOverProducts(product._id, i)
+                        }
+                        onMouseOut={handleMouseOutProducts}
+                      >
+                        {product.title.en}
+                      </Avatar>
+                      {hoveredProductId === product._id &&
+                        currentProductIndex === i && (
+                          <div>{product.title.en}</div>
+                        )}
+                    </React.Fragment>
+                  ))}
+                </span>
               </TableCell>
+
               <TableCell>
                 <span className="text-sm">{dis?.discountPrice}</span>
               </TableCell>
