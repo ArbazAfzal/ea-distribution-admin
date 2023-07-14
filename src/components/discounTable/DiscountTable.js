@@ -64,7 +64,6 @@ const DiscountTable = ({
     setHoveredCustomerId(customerId);
     setCurrentcustomerIndex(index);
   };
-  console.log("object::::,", currentcustomerIndex);
   const handleMouseOverProducts = (productId,i) => {
     setHoveredProductId(productId);
     setCurrentProductIndex(i)
