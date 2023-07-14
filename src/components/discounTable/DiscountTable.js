@@ -40,7 +40,7 @@ const DiscountTable = ({
       }
     });
   };
-
+  
   const handleUpdateDiscount = async (id) => {
     handleUpdate(id);
     click();
@@ -50,6 +50,7 @@ const DiscountTable = ({
     await DiscountServices.deleteDiscount(id);
     notifySuccess("Deleted");
   };
+  
 
   const resp = useAsync(DiscountServices.getAllDiscount);
   const ID = useSelector((state) => state.id);
@@ -85,12 +86,7 @@ const DiscountTable = ({
           data?.discounts?.map((dis, i) => (
             <TableRow key={i + 1}>
               <TableCell>
-                <CheckBox
-                  type="checkbox"
-                  // id={dis._id}
-                  // checked={isCheck.includes(dis._id)}
-                  // onChange={handleClick}
-                />
+            
               </TableCell>
               {console.log(dis, "---------")}
               <TableCell>
