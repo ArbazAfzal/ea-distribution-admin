@@ -87,7 +87,6 @@ const DiscountTable = ({
               <TableCell>
             
               </TableCell>
-              {console.log(dis, "---------")}
               <TableCell>
                 <span>
                   {dis?.customers?.map((customer) => (
