@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useEffect, useState} from "react";
 import { SidebarContext } from "context/SidebarContext";
 import useAsync from "hooks/useAsync";
 import React, { useContext } from "react";
@@ -58,12 +58,41 @@ const UserDiscount = () => {
 
   } = useContext(SidebarContext);
 
+const [add,setAdd]=useState(false)
+const [update,setUpdate]=useState(false)
+console.log("🚀 ~ file: UserDiscount.js:63 ~ UserDiscount ~ update:", update)
+const handleAdd=()=>{
+  setAdd(true)
+}
+const handleUpdate=()=>{
+  setUpdate(true)
+}
+const [resp,setRes]=useState(false)
+useEffect(() => {
+  const fetchDiscounts = async () => {
+    try {
+      const response = await DiscountServices.getAllDiscount(
+        currentPage,
+        limitData,
+        searchText,
+        sortedField,
+        searchCustomerName
+      );
+      setRes(response)
+    resp?setAdd(false):"";
+    resp?setUpdate(false):"";
 
-  const resp = useAsync(() =>
-    DiscountServices.getAllDiscount(currentPage, limitData, searchText, sortedField,searchCustomerName,),
-    [currentPage, limitData, searchText, sortedField, searchCustomerName]
-  )
- 
+      // Handle the response, e.g., update state with the fetched data
+    } catch (error) {
+      // Handle the error, e.g., display an error message
+    }
+  };
+
+  fetchDiscounts();
+
+  
+}, [currentPage, limitData, searchText, sortedField, searchCustomerName,add,update]);
+
   const { data, loading } = useAsync(
     () =>
       ProductServices.getAllProducts({
@@ -75,18 +104,19 @@ const UserDiscount = () => {
       }),
     []
   );
+  
 
 
  
   const ID = useSelector((state) => state.id)
-  
+
   return (
     <>
       < >{t("Discount Page")}</>
       <DeleteModal id={ID} title={title} />
       <BulkActionDrawer ids={ID} title="Discount" />
       <MainDrawer>
-        <DiscountDrawer id={ID}  />
+        <DiscountDrawer id={ID}  handleUpd={()=>handleUpdate()} update={update}  handleAdd={()=>handleAdd()} add={add} />
       </MainDrawer>
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
         <CardBody className="">
@@ -179,14 +209,13 @@ const UserDiscount = () => {
             <Table>
               <TableHeader>
                 <tr>
-                  <TableCell>
-                  </TableCell>
+               
                   <TableCell>Customer Email</TableCell>
                   <TableCell>Product Name</TableCell>
                   <TableCell> Discount</TableCell>
                 </tr>
               </TableHeader>
-              <DiscountTable data={resp.data} />
+              <DiscountTable  data={resp} />
             </Table>
             <TableFooter>
               <Pagination
