@@ -89,11 +89,12 @@ const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
     }
   }, [id]);
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const selectedCustomerIds = email.map((item) => item._id);
     const selectedProductIds = name.map((item) => item._id);
-
+  
     if (
       selectedCustomerIds.length === 0 ||
       selectedProductIds.length === 0 ||
@@ -106,16 +107,16 @@ const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
         ? notifySuccess("Discount Updated successfully")
         : notifySuccess("Discount added successfully");
     }
-
+  
     const discountData = {
       products: selectedProductIds,
       customers: selectedCustomerIds,
       discountPrice: discount,
     };
-
+  
     try {
       setIsSubmitting(true);
-
+  
       if (id) {
         const res = await DiscountServices.updateDiscount(id, discountData);
 
@@ -138,7 +139,7 @@ const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
 
         notifySuccess(res.message);
       }
-
+  
       toggleDrawer(); // Close the drawer
       const res = console.log(res, "========");
     } catch (err) {
