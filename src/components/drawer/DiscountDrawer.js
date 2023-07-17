@@ -52,9 +52,9 @@ const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
   const products = data?.products;
   const optionsForProducts = Array.isArray(products)
     ? products.map(({ _id, slug }) => ({
-        namee: slug,
-        _id: _id,
-      }))
+      namee: slug,
+      _id: _id,
+    }))
     : [];
   useEffect(() => {
     if (id) {
@@ -71,9 +71,9 @@ const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
             setName(
               Array.isArray(resdis.products)
                 ? resdis.products.map(({ _id, slug }) => ({
-                    namee: slug,
-                    _id: _id,
-                  }))
+                  namee: slug,
+                  _id: _id,
+                }))
                 : []
             );
             setDiscount(resdis.discountPrice);
@@ -93,6 +93,7 @@ const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
     e.preventDefault();
     const selectedCustomerIds = email.map((item) => item._id);
     const selectedProductIds = name.map((item) => item._id);
+
     if (
       selectedCustomerIds.length === 0 ||
       selectedProductIds.length === 0 ||
@@ -105,13 +106,16 @@ const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
         ? notifySuccess("Discount Updated successfully")
         : notifySuccess("Discount added successfully");
     }
+
     const discountData = {
       products: selectedProductIds,
       customers: selectedCustomerIds,
       discountPrice: discount,
     };
+
     try {
       setIsSubmitting(true);
+
       if (id) {
         const res = await DiscountServices.updateDiscount(id, discountData);
 
@@ -134,6 +138,7 @@ const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
 
         notifySuccess(res.message);
       }
+
       toggleDrawer(); // Close the drawer
       const res = console.log(res, "========");
     } catch (err) {
@@ -174,13 +179,13 @@ const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
       <div className="w-full relative p-6 border-b border-gray-100 bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
         {id ? (
           <Title
-            register={() => {}}
+            register={() => { }}
             title={t("DrawerUpdateDiscount")}
             description={t("UpdateDiscount")}
           />
         ) : (
           <Title
-            register={() => {}}
+            register={() => { }}
             title={t("DrawerAddDiscount")}
             description={t("AddDiscount")}
           />
