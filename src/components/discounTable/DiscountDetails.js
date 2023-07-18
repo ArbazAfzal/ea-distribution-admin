@@ -1,4 +1,3 @@
-
 import { Table, TableBody, TableCell, TableContainer, TableHeader, TableRow } from '@windmill/react-ui'
 import PageTitle from 'components/Typography/PageTitle'
 import React, { useState, useEffect } from 'react'
@@ -48,7 +47,7 @@ const DiscountDetails = () => {
                       src={item.image}
                       />
                      </TableCell>
-                     {/* {console.log(item,"==")} */}
+                   
                    </TableRow>
                 ))}
                 <TableCell>{discountdata?.discountPrice}</TableCell>

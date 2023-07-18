@@ -4,10 +4,10 @@ import ReactTooltip from "react-tooltip";
 import { setID } from "redux/Actions/SettingActions";
 
 const Tooltip = ({ id, Icon, title, bgColor }) => {
-  const dispatch=useDispatch()
-  if(id){
-dispatch(setID(id))
-  }
+  // const dispatch = useDispatch()
+  // if (id) {
+  //   dispatch(setID(id))
+  // }
   return (
     <>
       <p data-tip data-for={id} className="text-xl">
