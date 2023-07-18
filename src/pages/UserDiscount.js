@@ -17,16 +17,13 @@ import {
   CardBody,
   Pagination,
 } from "@windmill/react-ui";
-import PageTitle from "components/Typography/PageTitle";
 
 import useToggleDrawer from "hooks/useToggleDrawer";
-import UploadManyTwo from "components/common/UploadManyTwo";
 import NotFound from "components/table/NotFound";
 
 import MainDrawer from "components/drawer/MainDrawer";
-import CheckBox from "components/form/CheckBox";
 
-import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
+import {  FiPlus} from "react-icons/fi";
 import DeleteModal from "components/modal/DeleteModal";
 import BulkActionDrawer from "components/drawer/BulkActionDrawer";
 import TableLoading from "components/preloader/TableLoading";
@@ -34,13 +31,13 @@ import DiscountTable from "components/discounTable/DiscountTable";
 import DiscountDrawer from "components/drawer/DiscountDrawer";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { notifyError } from "utils/toast";
-const UserDiscount = (id) => {
+const UserDiscount = () => {
   const { title, allId, serviceId, handleDeleteMany, handleUpdateMany } =
     useToggleDrawer();
-
+  
   const { t } = useTranslation();
   const {
+    isUpdate,
     toggleDrawer,
     currentPage,
     handleChangePage,
@@ -52,47 +49,47 @@ const UserDiscount = (id) => {
     setSortedField,
     limitData,
     searchCustomerName,
+    searchCustomerRef,
     setSearchCustomerName
 
   } = useContext(SidebarContext);
 
-  const [add, setAdd] = useState(false)
-  const [update, setUpdate] = useState(false)
-  const handleAdd = () => {
-    setAdd(true)
-  }
-  const handleUpdate = () => {
-    setUpdate(true)
-  }
-  const [resp, setRes] = useState(false)
-  useEffect(() => {
-    const fetchDiscounts = async () => {
-      try {
-        const response = await DiscountServices.getAllDiscount(
-          currentPage,
-          limitData,
-          searchText,
-          sortedField,
-          searchCustomerName
-        );
-        setRes(response)
-        if (resp) {
-          setAdd(false)
-          setUpdate(false)
-        }
-        else{
-        }      
-      } catch (error) { 
-        notifyError(error.message)   
-      }
-    };
+const [add,setAdd]=useState(false)
+const [update,setUpdate]=useState(false)
+console.log("🚀 ~ file: UserDiscount.js:63 ~ UserDiscount ~ update:", update)
+const handleAdd=()=>{
+  setAdd(true)
+}
+const handleUpdate=()=>{
+  setUpdate(true)
+}
+const [resp,setRes]=useState(false)
+useEffect(() => {
+  const fetchDiscounts = async () => {
+    try {
+      const response = await DiscountServices.getAllDiscount(
+        currentPage,
+        limitData,
+        searchText,
+        sortedField,
+        searchCustomerName
+      );
+      setRes(response)
+    resp?setAdd(false):"";
+    resp?setUpdate(false):"";
 
-    fetchDiscounts();
+      // Handle the response, e.g., update state with the fetched data
+    } catch (error) {
+      // Handle the error, e.g., display an error message
+    }
+  };
 
+  fetchDiscounts();
 
-  }, [currentPage, limitData, searchText, sortedField, searchCustomerName, add, update,id]);
+  
+}, [currentPage, limitData, searchText, sortedField, searchCustomerName,add,update]);
 
-  const {loading } = useAsync(
+  const { data, loading } = useAsync(
     () =>
       ProductServices.getAllProducts({
         page: currentPage,
@@ -103,19 +100,19 @@ const UserDiscount = (id) => {
       }),
     []
   );
+  
 
 
-
-
+ 
   const ID = useSelector((state) => state.id)
 
   return (
     <>
-      < >{t("Discount Page")}</>
+      <>{t("Discount Page")}</>
       <DeleteModal id={ID} title={title} />
       <BulkActionDrawer ids={ID} title="Discount" />
       <MainDrawer>
-        <DiscountDrawer id={ID} handleUpd={() => handleUpdate()} update={update} handleAdd={() => handleAdd()} add={add} />
+        <DiscountDrawer id={ID}  handleUpd={()=>handleUpdate()} update={update}  handleAdd={()=>handleAdd()} add={add} />
       </MainDrawer>
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
         <CardBody className="">
@@ -124,9 +121,9 @@ const UserDiscount = (id) => {
             className="py-3 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6  xl:flex"
           >
             <div className="flex justify-start xl:w-1/2  md:w-full">
-
+             
             </div>
-            <div className="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start flex-grow-0">
+            <div className="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start flex-grow-0"> 
               <div className="w-full md:w-48 lg:w-48 xl:w-48">
                 <Button
                   onClick={toggleDrawer}
@@ -149,7 +146,6 @@ const UserDiscount = (id) => {
             onSubmit={handleSubmitForAll}
             className="py-3 grid gap-4 lg:gap-6 xl:gap-6 md:flex xl:flex"
           >
-
             <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
               <Input
                 value={searchCustomerName}
@@ -208,10 +204,11 @@ const UserDiscount = (id) => {
             <Table>
               <TableHeader>
                 <tr>
-
+               
                   <TableCell>Customer Email</TableCell>
                   <TableCell>Product Name</TableCell>
                   <TableCell> Discount</TableCell>
+                  <TableCell> Details</TableCell>
                 </tr>
               </TableHeader>
               <DiscountTable data={resp} />

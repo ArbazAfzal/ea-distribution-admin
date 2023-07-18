@@ -9,8 +9,16 @@ import EditDeleteButton from "components/table/EditDeleteButton";
 import useToggleDrawer from "hooks/useToggleDrawer";
 import useDiscountSubmit from "hooks/useDiscountSubmit";
 import DeleteModal from "components/modal/DeleteModal";
+import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
 
-const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) => {
+const DiscountTable = ({
+  isCheck,
+  setIsCheck,
+  data,
+  click,
+  handleUpd,
+  update,
+}) => {
   const { title, handleModalOpen, handleUpdate, serviceId } = useToggleDrawer();
   const { resData } = useDiscountSubmit(serviceId);
 
@@ -28,13 +36,13 @@ const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) =>
 
   const handleUpdateDiscount = async (id) => {
     handleUpdate(id);
-    handleUpd(true)
+    handleUpd(true);
   };
 
-  const handleDeleteDiscount = async (id) => {
-    await DiscountServices.deleteDiscount(id);
-    notifySuccess("Deleted");
-  };
+  // const handleDeleteDiscount = async (id) => {
+  //   await DiscountServices.deleteDiscount(id);
+  //   notifySuccess("Deleted");
+  // };
 
   // const resp = useAsync(DiscountServices.getAllDiscount);
   const ID = useSelector((state) => state.id);
@@ -51,13 +59,18 @@ const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) =>
   const handleMouseOut = () => {
     setHoveredCustomerId(null);
   };
+  const handleMouseOutProducts = () => {
+    setHoveredProductId(null);
+  };
 
   const [hoveredCustomerId, setHoveredCustomerId] = useState(null);
   const [hoveredProductId, setHoveredProductId] = useState(null);
   const [currentcustomerIndex, setCurrentcustomerIndex] = useState(null);
 
   const [avatarStartIndexes, setAvatarStartIndexes] = useState({});
-  const [avatarStartIndexesProducts, setAvatarStartIndexesProducts] = useState({});
+  const [avatarStartIndexesProducts, setAvatarStartIndexesProducts] = useState(
+    {}
+  );
 
   const handleShowNextAvatarsCus = (id) => {
     setAvatarStartIndexes((prevIndexes) => ({
@@ -86,7 +99,10 @@ const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) =>
       [id]: Math.max(prevIndexes[id] - 4, 0),
     }));
   };
-
+const history=useHistory();
+const routeToDet=(id)=>{
+  history.push(`/discountDetails/${id}`)
+}
   return (
     <>
       {isCheck?.length === 1 && <DeleteModal id={ID} title={title} />}
@@ -95,7 +111,8 @@ const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) =>
         {Array.isArray(data?.discounts) &&
           data?.discounts?.map((dis, i) => {
             const avatarStartIndex = avatarStartIndexes[dis._id] || 0;
-            const avatarStartIndexProducts = avatarStartIndexesProducts[dis._id] || 0;
+            const avatarStartIndexProducts =
+              avatarStartIndexesProducts[dis._id] || 0;
 
             return (
               <TableRow key={i + 1}>
@@ -108,7 +125,9 @@ const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) =>
                 </TableCell> */}
                 <TableCell>
                   {avatarStartIndex > 0 && (
-                    <button onClick={() => handleShowPreviousAvatarsCus(dis._id)}>
+                    <button
+                      onClick={() => handleShowPreviousAvatarsCus(dis._id)}
+                    >
                       Prev 4 cus
                     </button>
                   )}
@@ -152,45 +171,54 @@ const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) =>
                 </TableCell>
                 <TableCell>
                   {avatarStartIndexProducts > 0 && (
-                    <button onClick={() => handleShowPreviousAvatarsProducts(dis._id)}>
+                    <button
+                      onClick={() => handleShowPreviousAvatarsProducts(dis._id)}
+                    >
                       Prev 4 products
                     </button>
                   )}
 
                   <span>
                     {dis?.products
-                      ?.slice(avatarStartIndexProducts, avatarStartIndexProducts + 4)
+                      ?.slice(
+                        avatarStartIndexProducts,
+                        avatarStartIndexProducts + 4
+                      )
                       .map((product) => (
                         <React.Fragment key={product._id}>
                           <Avatar
-                          src={product.image}
-                          alt={product.title.en.charAt().toUpperCase()}
+                            src={product.image}
+                            alt={product.title.en.charAt().toUpperCase()}
                             style={{
                               border: "1px solid blue",
-                           
                             }}
-                            onMouseOver={() => handleMouseOverProduct(product._id, i)}
-                            onMouseOut={handleMouseOut}
+                            onMouseOver={() =>
+                              handleMouseOverProduct(product._id, i)
+                            }
+                            onMouseOut={handleMouseOutProducts}
                           />
-                          
 
                           {hoveredProductId === product._id &&
                             currentcustomerIndex === i && (
                               <div>{product.title.en}</div>
                             )}
-                            
                         </React.Fragment>
                       ))}
                   </span>
 
                   {avatarStartIndexProducts + 4 < dis?.products?.length && (
-                    <button onClick={() => handleShowNextAvatarsProducts(dis._id)}>
+                    <button
+                      onClick={() => handleShowNextAvatarsProducts(dis._id)}
+                    >
                       Next 4 products
                     </button>
                   )}
                 </TableCell>
                 <TableCell>
                   <span className="text-sm">{dis?.discountPrice}</span>
+                </TableCell>
+                <TableCell>
+                  <button onClick={()=>routeToDet(dis._id)}>Details</button>
                 </TableCell>
                 <TableCell>
                   <EditDeleteButton
@@ -201,7 +229,6 @@ const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) =>
                     isCheck={isCheck}
                     product={dis}
                     parent={data}
-                    handleDelete={handleDeleteDiscount}
                     handleUpdate={handleUpdateDiscount}
                   />
                 </TableCell>

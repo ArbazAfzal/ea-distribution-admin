@@ -1,3 +1,4 @@
+import DiscountDetails from "components/discounTable/DiscountDetails";
 import UserDiscount from "pages/UserDiscount";
 import { lazy } from "react";
 
@@ -41,6 +42,10 @@ const routes = [
   {
     path: "/userDiscount",
     component: UserDiscount,
+  },
+  {
+    path: "/discountDetails/:id",
+    component: DiscountDetails,
   },
   {
     path: "/products",

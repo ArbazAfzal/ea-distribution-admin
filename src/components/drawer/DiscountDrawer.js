@@ -12,7 +12,6 @@ import DrawerButton from "components/form/DrawerButton";
 import { t } from "i18next";
 import useAsync from "hooks/useAsync";
 const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
-  console.log("🚀 ~ file: DiscountDrawer.js:282 ~ DiscountDrawer ~ add:", add);
   const {
     toggleDrawer,
     lang,
