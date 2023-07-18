@@ -2,20 +2,18 @@ import React, { useState } from "react";
 import { TableBody, TableCell, TableRow } from "@windmill/react-ui";
 import { Avatar } from "@windmill/react-ui";
 import DiscountServices from "services/DiscountServices";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { notifySuccess } from "utils/toast";
 import CheckBox from "components/form/CheckBox";
 import EditDeleteButton from "components/table/EditDeleteButton";
 import useToggleDrawer from "hooks/useToggleDrawer";
 import useDiscountSubmit from "hooks/useDiscountSubmit";
 import DeleteModal from "components/modal/DeleteModal";
-import {
-  Link,
-
-} from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import Tooltip from "components/tooltip/Tooltip";
 import { FiZoomIn } from "react-icons/fi";
 import { t } from "i18next";
+import { setID } from "redux/Actions/SettingActions";
 
 const DiscountTable = ({
   isCheck,
@@ -105,7 +103,10 @@ const DiscountTable = ({
       [id]: Math.max(prevIndexes[id] - 4, 0),
     }));
   };
-
+  const dispatch = useDispatch();
+  const routeToDetails = (id) => {
+    dispatch(setID(id));
+  };
   return (
     <>
       {isCheck?.length === 1 && <DeleteModal id={ID} title={title} />}
@@ -225,12 +226,14 @@ const DiscountTable = ({
                     to={`/discountDetails/${dis._id}`}
                     className="flex justify-center text-gray-400 hover:text-green-600"
                   >
-                    <Tooltip
-                      id="view"
-                      Icon={FiZoomIn}
-                      title={t("DetailsTbl")}
-                      bgColor="#10B981"
-                    />
+                    <button onClick={() => routeToDetails(dis?._id)}>
+                      <Tooltip
+                        id="view"
+                        Icon={FiZoomIn}
+                        title={t("DetailsTbl")}
+                        bgColor="#10B981"
+                      />
+                    </button>
                   </Link>
                 </TableCell>
                 <TableCell>
