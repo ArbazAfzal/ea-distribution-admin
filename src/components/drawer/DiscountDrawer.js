@@ -11,6 +11,7 @@ import { Scrollbars } from "react-custom-scrollbars-2";
 import DrawerButton from "components/form/DrawerButton";
 import { t } from "i18next";
 import useAsync from "hooks/useAsync";
+import { Card, CardBody, Input } from "@windmill/react-ui";
 const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
   const {
     toggleDrawer,
@@ -192,6 +193,8 @@ const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
         )}
       </div>
       <Scrollbars className="w-full md:w-7/12 lg:w-8/12 xl:w-8/12 relative dark:bg-gray-700 dark:text-gray-200">
+        <Card className="overflow-y-scroll flex-grow scrollbar-hide w-full max-h-full">
+          <CardBody>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
             <LabelArea label={t("Customer Email")} />
@@ -231,7 +234,7 @@ const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
               <div className="flex items-center">
                 <button
                   type="button"
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                   onClick={handleSubtractDiscount}
                 >
                   -
@@ -244,7 +247,7 @@ const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
                 />
                 <button
                   type="button"
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                   onClick={handleAddDiscount}
                 >
                   +
@@ -262,6 +265,8 @@ const DiscountDrawer = ({ id, add, handleAdd, handleUpd, update }) => {
             </div>
           </div>
         </form>
+        </CardBody>
+        </Card>
       </Scrollbars>
     </>
   );

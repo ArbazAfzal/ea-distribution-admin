@@ -31,13 +31,13 @@ import DiscountTable from "components/discounTable/DiscountTable";
 import DiscountDrawer from "components/drawer/DiscountDrawer";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-const UserDiscount = () => {
+import PageTitle from "components/Typography/PageTitle";
+const UserDiscount = ({id}) => {
   const { title, allId, serviceId, handleDeleteMany, handleUpdateMany } =
     useToggleDrawer();
   
   const { t } = useTranslation();
   const {
-    isUpdate,
     toggleDrawer,
     currentPage,
     handleChangePage,
@@ -50,7 +50,8 @@ const UserDiscount = () => {
     limitData,
     searchCustomerName,
     searchCustomerRef,
-    setSearchCustomerName
+    setSearchCustomerName,
+    isUpdate
 
   } = useContext(SidebarContext);
 
@@ -75,8 +76,12 @@ useEffect(() => {
         searchCustomerName
       );
       setRes(response)
-    resp?setAdd(false):"";
-    resp?setUpdate(false):"";
+      if(resp){
+        setAdd(false)
+        setUpdate(false)
+      }
+    setAdd(false)
+    setUpdate(false)
 
       // Handle the response, e.g., update state with the fetched data
     } catch (error) {
@@ -87,7 +92,7 @@ useEffect(() => {
   fetchDiscounts();
 
   
-}, [currentPage, limitData, searchText, sortedField, searchCustomerName,add,update]);
+}, [currentPage, limitData, searchText, sortedField, searchCustomerName,add,update,isUpdate]);
 
   const { data, loading } = useAsync(
     () =>
@@ -108,7 +113,7 @@ useEffect(() => {
 
   return (
     <>
-      <>{t("Discount Page")}</>
+      <PageTitle PageTitle>{t("All Discount")}</PageTitle>
       <DeleteModal id={ID} title={title} />
       <BulkActionDrawer ids={ID} title="Discount" />
       <MainDrawer>
@@ -207,8 +212,9 @@ useEffect(() => {
                
                   <TableCell>Customer Email</TableCell>
                   <TableCell>Product Name</TableCell>
-                  <TableCell> Discount</TableCell>
-                  <TableCell> Details</TableCell>
+                  <TableCell> DISCOUNT</TableCell>
+                  <TableCell> DETAILS</TableCell>
+                  <TableCell> ACTIONS</TableCell>
                 </tr>
               </TableHeader>
               <DiscountTable data={resp} />
