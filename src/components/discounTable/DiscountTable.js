@@ -9,7 +9,13 @@ import EditDeleteButton from "components/table/EditDeleteButton";
 import useToggleDrawer from "hooks/useToggleDrawer";
 import useDiscountSubmit from "hooks/useDiscountSubmit";
 import DeleteModal from "components/modal/DeleteModal";
-import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import {
+  Link,
+
+} from "react-router-dom/cjs/react-router-dom.min";
+import Tooltip from "components/tooltip/Tooltip";
+import { FiZoomIn } from "react-icons/fi";
+import { t } from "i18next";
 
 const DiscountTable = ({
   isCheck,
@@ -99,10 +105,7 @@ const DiscountTable = ({
       [id]: Math.max(prevIndexes[id] - 4, 0),
     }));
   };
-const history=useHistory();
-const routeToDet=(id)=>{
-  history.push(`/discountDetails/${id}`)
-}
+
   return (
     <>
       {isCheck?.length === 1 && <DeleteModal id={ID} title={title} />}
@@ -218,7 +221,17 @@ const routeToDet=(id)=>{
                   <span className="text-sm">{dis?.discountPrice}</span>
                 </TableCell>
                 <TableCell>
-                  <button onClick={()=>routeToDet(dis._id)}>Details</button>
+                  <Link
+                    to={`/discountDetails/${dis._id}`}
+                    className="flex justify-center text-gray-400 hover:text-green-600"
+                  >
+                    <Tooltip
+                      id="view"
+                      Icon={FiZoomIn}
+                      title={t("DetailsTbl")}
+                      bgColor="#10B981"
+                    />
+                  </Link>
                 </TableCell>
                 <TableCell>
                   <EditDeleteButton
