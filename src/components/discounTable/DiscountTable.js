@@ -8,6 +8,7 @@ import CheckBox from "components/form/CheckBox";
 import EditDeleteButton from "components/table/EditDeleteButton";
 import useToggleDrawer from "hooks/useToggleDrawer";
 import useDiscountSubmit from "hooks/useDiscountSubmit";
+import DeleteModal from "components/modal/DeleteModal";
 
 const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) => {
   const { title, handleModalOpen, handleUpdate, serviceId } = useToggleDrawer();

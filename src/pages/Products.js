@@ -98,7 +98,7 @@ console.log(serviceId,"product")
       <DeleteModal ids={allId} setIsCheck={setIsCheck} title={title} />
       <BulkActionDrawer ids={allId} title="Products" />
       <MainDrawer>
-        <DiscountDrawer id={serviceId} />
+        <ProductDrawer id={serviceId}   />
       </MainDrawer>
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
         <CardBody className="">

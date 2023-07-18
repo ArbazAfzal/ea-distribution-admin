@@ -1,4 +1,4 @@
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { SidebarContext } from "context/SidebarContext";
 import useAsync from "hooks/useAsync";
 import React, { useContext } from "react";
@@ -34,10 +34,11 @@ import DiscountTable from "components/discounTable/DiscountTable";
 import DiscountDrawer from "components/drawer/DiscountDrawer";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-const UserDiscount = () => {
+import { notifyError } from "utils/toast";
+const UserDiscount = (id) => {
   const { title, allId, serviceId, handleDeleteMany, handleUpdateMany } =
     useToggleDrawer();
-  
+
   const { t } = useTranslation();
   const {
     toggleDrawer,
@@ -58,40 +59,42 @@ const UserDiscount = () => {
 
   } = useContext(SidebarContext);
 
-const [add,setAdd]=useState(false)
-const [update,setUpdate]=useState(false)
-console.log("🚀 ~ file: UserDiscount.js:63 ~ UserDiscount ~ update:", update)
-const handleAdd=()=>{
-  setAdd(true)
-}
-const handleUpdate=()=>{
-  setUpdate(true)
-}
-const [resp,setRes]=useState(false)
-useEffect(() => {
-  const fetchDiscounts = async () => {
-    try {
-      const response = await DiscountServices.getAllDiscount(
-        currentPage,
-        limitData,
-        searchText,
-        sortedField,
-        searchCustomerName
-      );
-      setRes(response)
-    resp?setAdd(false):"";
-    resp?setUpdate(false):"";
+  const [add, setAdd] = useState(false)
+  const [update, setUpdate] = useState(false)
+  console.log("🚀 ~ file: UserDiscount.js:63 ~ UserDiscount ~ update:", update)
+  const handleAdd = () => {
+    setAdd(true)
+  }
+  const handleUpdate = () => {
+    setUpdate(true)
+  }
+  const [resp, setRes] = useState(false)
+  useEffect(() => {
+    const fetchDiscounts = async () => {
+      try {
+        const response = await DiscountServices.getAllDiscount(
+          currentPage,
+          limitData,
+          searchText,
+          sortedField,
+          searchCustomerName
+        );
+        setRes(response)
+        if (resp) {
+          setAdd(false)
+          setUpdate(false)
+        }
+        else{
+        }      
+      } catch (error) { 
+        notifyError(error.message)   
+      }
+    };
 
-      // Handle the response, e.g., update state with the fetched data
-    } catch (error) {
-      // Handle the error, e.g., display an error message
-    }
-  };
+    fetchDiscounts();
 
-  fetchDiscounts();
 
-  
-}, [currentPage, limitData, searchText, sortedField, searchCustomerName,add,update]);
+  }, [currentPage, limitData, searchText, sortedField, searchCustomerName, add, update,id]);
 
   const { data, loading } = useAsync(
     () =>
@@ -104,10 +107,10 @@ useEffect(() => {
       }),
     []
   );
-  
 
 
- 
+
+
   const ID = useSelector((state) => state.id)
 
   return (
@@ -116,7 +119,7 @@ useEffect(() => {
       <DeleteModal id={ID} title={title} />
       <BulkActionDrawer ids={ID} title="Discount" />
       <MainDrawer>
-        <DiscountDrawer id={ID}  handleUpd={()=>handleUpdate()} update={update}  handleAdd={()=>handleAdd()} add={add} />
+        <DiscountDrawer id={ID} handleUpd={() => handleUpdate()} update={update} handleAdd={() => handleAdd()} add={add} />
       </MainDrawer>
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
         <CardBody className="">
@@ -125,9 +128,9 @@ useEffect(() => {
             className="py-3 md:pb-0 grid gap-4 lg:gap-6 xl:gap-6  xl:flex"
           >
             <div className="flex justify-start xl:w-1/2  md:w-full">
-             
+
             </div>
-            <div className="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start flex-grow-0"> 
+            <div className="lg:flex  md:flex xl:justify-end xl:w-1/2  md:w-full md:justify-start flex-grow-0">
               <div className="w-full md:w-48 lg:w-48 xl:w-48">
                 <Button
                   onClick={toggleDrawer}
@@ -209,17 +212,17 @@ useEffect(() => {
             <Table>
               <TableHeader>
                 <tr>
-               
+
                   <TableCell>Customer Email</TableCell>
                   <TableCell>Product Name</TableCell>
                   <TableCell> Discount</TableCell>
                 </tr>
               </TableHeader>
-              <DiscountTable  data={resp} />
+              <DiscountTable data={resp} />
             </Table>
             <TableFooter>
               <Pagination
-                totalResults={resp?.data?.totalDoc}
+                totalResults={resp?.totalDoc}
                 resultsPerPage={limitData}
                 onChange={handleChangePage}
                 label="Discount page Navigation"
