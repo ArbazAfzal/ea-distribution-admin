@@ -42,26 +42,22 @@ const UserDiscount = (id) => {
   const { t } = useTranslation();
   const {
     toggleDrawer,
-    lang,
     currentPage,
     handleChangePage,
     searchText,
     category,
-    setCategory,
     searchRef,
     handleSubmitForAll,
     sortedField,
     setSortedField,
     limitData,
     searchCustomerName,
-    searchCustomerRef,
     setSearchCustomerName
 
   } = useContext(SidebarContext);
 
   const [add, setAdd] = useState(false)
   const [update, setUpdate] = useState(false)
-  console.log("🚀 ~ file: UserDiscount.js:63 ~ UserDiscount ~ update:", update)
   const handleAdd = () => {
     setAdd(true)
   }
@@ -96,7 +92,7 @@ const UserDiscount = (id) => {
 
   }, [currentPage, limitData, searchText, sortedField, searchCustomerName, add, update,id]);
 
-  const { data, loading } = useAsync(
+  const {loading } = useAsync(
     () =>
       ProductServices.getAllProducts({
         page: currentPage,
