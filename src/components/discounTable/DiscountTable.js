@@ -17,7 +17,7 @@ import { setID } from "redux/Actions/SettingActions";
 import ReactTooltip from "react-tooltip";
 import { setViewID } from "redux/Actions/SideBarActions";
 
-const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) => {
+const DiscountTable = ({ isCheck, setIsCheck, data, click, handleUpd, update }) => {
   const { title, handleModalOpen, handleUpdate, serviceId } = useToggleDrawer();
   console.log("🚀 ~ file: DiscountTable.js:21 ~ DiscountTable ~ serviceId:", serviceId)
   const { resData } = useDiscountSubmit(serviceId);
@@ -41,8 +41,8 @@ const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) =>
 
 
   const ID = useSelector((state) => state.id);
-  const dispatch=useDispatch()
-  const getid = (id)=>{
+  const dispatch = useDispatch()
+  const getid = (id) => {
     dispatch(setViewID(id))
   }
 
@@ -121,143 +121,124 @@ const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) =>
                 </TableCell> */}
                 <TableCell>
                   {avatarStartIndex > 0 && (
-                    <button
+                    <button className="flex items-center justify-center text-white text-xs py-1 px-2 max-w-4xl h-5 rounded-full bg-green-600"
                       onClick={() => handleShowPreviousAvatarsCus(dis._id)}
                     >
-                      Prev 4 cus
+                      Prev
                     </button>
                   )}
 
-                  <span>
-                    {dis?.customers
-                      ?.slice(avatarStartIndex, avatarStartIndex + 4)
-                      .map((customer) => (
-                        <React.Fragment key={customer._id}>
-                          <div
-                            style={{
-                              border: "1px solid red",
-                              width: "50px",
-                              borderRadius: "50%",
-                              display: "inline-flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              fontSize: "24px",
-                              fontWeight: "bold",
-                              backgroundColor: "#eaeaea",
-                            }}
-                            onMouseOver={() => handleMouseOver(customer._id, i)}
-                            onMouseOut={handleMouseOut}
-                          >
-                            {customer.name.charAt(0).toUpperCase()}
-                          </div>
+                  <div className="relative">
+                    <span>
+                      {dis?.customers
+                        ?.slice(avatarStartIndex, avatarStartIndex + 4)
+                        .map((customer) => (
+                          <React.Fragment key={customer._id}>
+                            <div
+                              style={{
+                                border: "1px solid red",
+                                width: "50px",
+                                borderRadius: "50%",
+                                display: "inline-flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                fontSize: "24px",
+                                fontWeight: "bold",
+                                backgroundColor: "#eaeaea",
+                              }}
+                              onMouseOver={() => handleMouseOver(customer._id, i)}
+                              onMouseOut={handleMouseOut}
+                            >
+                              {customer.name.charAt(0).toUpperCase()}
+                            </div>
 
-                          {hoveredCustomerId === customer._id &&
-                            currentcustomerIndex === i && (
-                              <div>{customer.name}</div>
-                            )}
-                        </React.Fragment>
-                      ))}
-                  </span>
+                            {hoveredCustomerId === customer._id &&
+                              currentcustomerIndex === i && (
+                                <div className="absolute top-0 left-0 bg-green-500 py-1 px-2 text-white text-xs">{customer.name}</div>
+
+                              )}
+                          </React.Fragment>
+                        ))}
+                    </span>
+                  </div>
 
                   {avatarStartIndex + 4 < dis?.customers?.length && (
-                    // <button onClick={() => handleShowNextAvatarsCus(dis._id)}>
-                    //   Next 4 cust
-                    // </button>
-                    <div className="relative">
-                    <button
-                      className="tooltip-btn bg-green-500"
-                      data-tip
-                      data-for={`custom-tooltip-${i}`}
-                      data-event="mouseenter focus"
-                      data-event-off="mouseleave blur"
-                    >
-                      {/* {avatarStartIndex ? 4 : avatarStartIndex + dis?.customers?.length} */}
-                {dis?.customers?.length>4?dis?.customers?.length-4:""}
-                    </button>
+                    <div className="relative w-full">
 
-                    <ReactTooltip
-                        id={`custom-tooltip-${i}`}
-                        effect="solid"
-                        className="tooltip-container"
-                      >
-                        <div className="tooltip-content">
-                          {dis.customers.map((customer) =>
-                           <React.Fragment key={customer._id}>
-                           <div
-                             style={{
-                               border: "1px solid red",
-                               width: "50px",
-                               borderRadius: "50%",
-                               display: "inline-flex",
-                               justifyContent: "center",
-                               alignItems: "center",
-                               fontSize: "24px",
-                               fontWeight: "bold",
-                               backgroundColor: "#eaeaea",
-                             }}
-                             onMouseOver={() => handleMouseOver(customer._id, i)}
-                             onMouseOut={handleMouseOut}
-                           >
-                             {customer.name.charAt(0).toUpperCase()}
-                           </div>
- 
-                           {hoveredCustomerId === customer._id &&
-                             currentcustomerIndex === i && (
-                               <div>{customer.name}</div>
-                             )}
-                         </React.Fragment>
-                          )}
-                             {/* <p>{dis.customer.map((customer) => customer.name).join(", ")}</p> */}
-                        </div>
-                      </ReactTooltip>
-                     </div>
+                      <button className="absolute right-0 mx-32 flex items-center justify-center text-white text-xs py-1 px-2 max-w-4xl h-5 rounded-full bg-green-600" onClick={(() => getid(dis?._id))}>
+                        {dis?.customers?.length > 4 ? dis?.customers?.length - 4 : ""}
+                        <Link to={`/discountDetails/${dis._id}`}
+                        >
+                          more..
+                        </Link>
+                      </button>
+
+                      <button className="absolute top-12 right-0 mx-32 -mt-8 flex items-center justify-center text-white text-xs py-1 px-2 max-w-4xl h-5 rounded-full bg-green-600" onClick={() => handleShowNextAvatarsCus(dis._id)}>
+                        Next
+                      </button>
+
+                    </div>
+
+
                   )}
                 </TableCell>
                 <TableCell>
                   {avatarStartIndexProducts > 0 && (
-                    <button
+                    <button className="flex items-center justify-center text-white text-xs py-1 px-2 max-w-4xl h-5 rounded-full bg-green-600"
                       onClick={() => handleShowPreviousAvatarsProducts(dis._id)}
                     >
-                      Prev 4 products
+                      Prev
                     </button>
                   )}
 
-                  <span>
-                    {dis?.products
-                      ?.slice(
-                        avatarStartIndexProducts,
-                        avatarStartIndexProducts + 4
-                      )
-                      .map((product) => (
-                        <React.Fragment key={product._id}>
-                          <Avatar
-                            src={product.image}
-                            alt={product.title.en.charAt().toUpperCase()}
-                            style={{
-                              border: "1px solid blue",
-                           
-                            }}
-                            onMouseOver={() =>
-                              handleMouseOverProduct(product._id, i)
-                            }
-                            onMouseOut={handleMouseOutProducts}
-                          />
-                          
+                  <div className="relative">
+                    <span>
+                      {dis?.products
+                        ?.slice(
+                          avatarStartIndexProducts,
+                          avatarStartIndexProducts + 4
+                        )
+                        .map((product) => (
+                          <React.Fragment key={product._id}>
+                            <Avatar
+                              src={product.image}
+                              alt={product.title.en.charAt().toUpperCase()}
+                              style={{
+                                border: "1px solid blue",
 
-                          {hoveredProductId === product._id &&
-                            currentcustomerIndex === i && (
-                              <div>{product.title.en}</div>
-                            )}
-                            
-                        </React.Fragment>
-                      ))}
-                  </span>
+                              }}
+                              onMouseOver={() =>
+                                handleMouseOverProduct(product._id, i)
+                              }
+                              onMouseOut={handleMouseOutProducts}
+                            />
+
+
+                            {hoveredProductId === product._id &&
+                              currentcustomerIndex === i && (
+                                <div className="absolute top-0 left-0 -my-5 z-10 bg-green-500 py-1 px-2 text-white text-xs">{product.title.en}</div>
+                              )}
+
+                          </React.Fragment>
+                        ))}
+                    </span>
+                  </div>
 
                   {avatarStartIndexProducts + 4 < dis?.products?.length && (
-                    <button onClick={() => handleShowNextAvatarsProducts(dis._id)}>
-                      Next 4 products
-                    </button>
+                    <div className="relative">
+                      <button className="absolute top-0 right-0 mx-16 flex items-center justify-center text-white text-xs py-1 px-2 max-w-4xl h-5 rounded-full bg-green-600" onClick={(() => getid(dis?._id))}>
+                      {dis.products.length > 4 ? dis.products.length - 4 : ''}
+                        <Link to={`/discountDetails/${dis._id}`}
+                        >
+                           more..
+                        </Link>
+                      </button>
+                      <button className="absolute top-0 right-0 mx-16 -my-8 flex items-center justify-center text-white text-xs py-1 px-2 max-w-4xl h-5 rounded-full bg-green-600" onClick={() => handleShowNextAvatarsProducts(dis._id)}>
+                         Next
+                      </button>
+                    </div>
                   )}
+
                 </TableCell>
                 <TableCell>
                   <span className="text-sm">{dis?.discountPrice}</span>
@@ -266,14 +247,14 @@ const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) =>
                   <Link
                     to={`/discountDetails/${dis._id}`}
                     className="flex justify-center text-gray-400 hover:text-green-600"
-                  > 
-                  <button  onClick= {()=>{getid(dis?._id)}}>    
-                    <Tooltip
-                      id="view"
-                      Icon={FiZoomIn}
-                      title={t("DetailsTbl")}
-                      bgColor="#10B981"
-                    />
+                  >
+                    <button onClick={() => { getid(dis?._id) }}>
+                      <Tooltip
+                        id="view"
+                        Icon={FiZoomIn}
+                        title={t("DetailsTbl")}
+                        bgColor="#10B981"
+                      />
                     </button>
                   </Link>
                 </TableCell>
