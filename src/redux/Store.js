@@ -4,11 +4,13 @@ import thunk from "redux-thunk";
 import { settingReducers } from "./Reducers/SettingReducers";
 import { addToSideBarMenuReducer } from "./Reducers/SideBarMenuReducers";
 import SettingId from "./Reducers/SettingId";
+import SettingViewId from "./Reducers/SettingViewId";
 
 const reducer = combineReducers({
   addToSideBar: addToSideBarMenuReducer,
   setting: settingReducers,
-    id:SettingId
+    id:SettingId,
+    viewId:SettingViewId
 });
 
 const initialState = {

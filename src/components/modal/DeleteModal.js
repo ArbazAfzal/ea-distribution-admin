@@ -29,7 +29,6 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId, }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleDelete = async () => {
-    // return notifyError("CRUD operation is disabled for this option!");
     try {
       setIsSubmitting(true);
       if (location.pathname === "/products") {
@@ -76,11 +75,9 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId, }) => {
 
       if (location.pathname === "/categories" || category) {
         if (ids) {
-          //  console.log('delete modal categorices',ids)
           const res = await CategoryServices.deleteManyCategory({
             ids: ids,
           });
-          //  console.log('delete many category res',res)
           setIsUpdate(true);
           notifySuccess(res.message);
           setIsCheck([]);
@@ -93,7 +90,6 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId, }) => {
             setIsSubmitting(false);
             return closeModal();
           }
-          // console.log('delete modal open',id)
           const res = await CategoryServices.deleteCategory(id);
           setIsUpdate(true);
           notifySuccess(res.message);
@@ -105,7 +101,6 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId, }) => {
         location.pathname === `/categories/${useParamId}` ||
         category
       ) {
-        // console.log('delete modal ')
         if (id === undefined || !id) {
           notifyError("Please select a category first!");
           setIsSubmitting(false);
@@ -130,7 +125,6 @@ const DeleteModal = ({ id, ids, setIsCheck, category, title, useParamId, }) => {
       }
       if (location.pathname === "/userDiscount") {
         const res = await DiscountServices.deleteDiscount(id);
-        console.log("🚀 ~ file: DeleteModal.js:133 ~ handleDelete ~ res:", res,id)
         setIsUpdate(true);
         notifySuccess(res.message);
         setServiceId();

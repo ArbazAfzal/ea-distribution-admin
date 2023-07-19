@@ -33,12 +33,10 @@ import DeleteModal from "components/modal/DeleteModal";
 import BulkActionDrawer from "components/drawer/BulkActionDrawer";
 import TableLoading from "components/preloader/TableLoading";
 import SettingServices from "services/SettingServices";
-import DiscountDrawer from "components/drawer/DiscountDrawer";
-
 const Products = () => {
   const { title, allId, serviceId, handleDeleteMany, handleUpdateMany } =
     useToggleDrawer();
-console.log(serviceId,"product")
+
   const { t } = useTranslation();
   const {
     toggleDrawer,
@@ -67,9 +65,7 @@ console.log(serviceId,"product")
 
   const { data: globalSetting } = useAsync(SettingServices.getGlobalSetting);
   const currency = globalSetting?.default_currency || "$";
-  // console.log("product page", data);
 
-  // react hooks
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [isCheck, setIsCheck] = useState([]);
 
@@ -78,11 +74,11 @@ console.log(serviceId,"product")
     setIsCheck(data?.products.map((li) => li._id));
     if (isCheckAll) {
       setIsCheck([]);
-      console.log(data,"product image")
+     
     }
   };
 
-  // console.log('productss',products)
+  
   const {
     serviceData,
     filename,
@@ -98,7 +94,7 @@ console.log(serviceId,"product")
       <DeleteModal ids={allId} setIsCheck={setIsCheck} title={title} />
       <BulkActionDrawer ids={allId} title="Products" />
       <MainDrawer>
-        <DiscountDrawer id={serviceId} />
+        <ProductDrawer id={serviceId}   />
       </MainDrawer>
       <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
         <CardBody className="">

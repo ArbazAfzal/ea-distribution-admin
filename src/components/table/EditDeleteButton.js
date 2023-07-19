@@ -16,7 +16,6 @@ const EditDeleteButton = ({
   product,
   parent,
   children,
-  handleUpdateDiscount,
 }) => {
 
   const { t } = useTranslation();
@@ -55,7 +54,7 @@ const EditDeleteButton = ({
           <button
             disabled={isCheck?.length > 0}
             onClick={() =>
-               handleUpdate(id)} // Use handleUpdateDiscount for updating discounts
+               handleUpdate(id)} 
             className="p-2 cursor-pointer text-gray-400 hover:text-green-600 focus:outline-none"
           >
             <Tooltip
