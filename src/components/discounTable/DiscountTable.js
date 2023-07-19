@@ -9,12 +9,12 @@ import EditDeleteButton from "components/table/EditDeleteButton";
 import useToggleDrawer from "hooks/useToggleDrawer";
 import useDiscountSubmit from "hooks/useDiscountSubmit";
 import DeleteModal from "components/modal/DeleteModal";
-import { Link, useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
-import ReactTooltip from "react-tooltip";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import Tooltip from "components/tooltip/Tooltip";
 import { FiZoomIn } from "react-icons/fi";
 import { t } from "i18next";
 import { setID } from "redux/Actions/SettingActions";
+import ReactTooltip from "react-tooltip";
 
 const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) => {
   const { title, handleModalOpen, handleUpdate, serviceId } = useToggleDrawer();

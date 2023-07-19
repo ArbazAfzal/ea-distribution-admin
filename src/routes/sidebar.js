@@ -47,6 +47,7 @@ const sidebar = [
         path: "/userDiscount",
         name: " Discount",
       },
+  
     ],
   },
 
