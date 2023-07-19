@@ -5,7 +5,8 @@ import { useSelector } from 'react-redux'
 import DiscountServices from 'services/DiscountServices'
 
 const DiscountDetails = () => {
-  const ID = useSelector((state) => state.id);
+  const ID = useSelector((state) => state.viewId);
+  console.log("🚀 ~ file: DiscountDetails.js:9 ~ DiscountDetails ~ ID:", ID)
   const [discountdata, setDiscount] = useState({ customers: [], products: [] });
 
   useEffect(() => {

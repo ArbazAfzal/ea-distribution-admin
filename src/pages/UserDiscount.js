@@ -57,7 +57,6 @@ const UserDiscount = ({id}) => {
 
 const [add,setAdd]=useState(false)
 const [update,setUpdate]=useState(false)
-console.log("🚀 ~ file: UserDiscount.js:63 ~ UserDiscount ~ update:", update)
 const handleAdd=()=>{
   setAdd(true)
 }
@@ -80,8 +79,7 @@ useEffect(() => {
         setAdd(false)
         setUpdate(false)
       }
-    setAdd(false)
-    setUpdate(false)
+   
 
       // Handle the response, e.g., update state with the fetched data
     } catch (error) {
@@ -110,6 +108,7 @@ useEffect(() => {
 
  
   const ID = useSelector((state) => state.id)
+  console.log("🚀 ~ file: UserDiscount.js:111 ~ UserDiscount ~ ID:", ID)
 
   return (
     <>

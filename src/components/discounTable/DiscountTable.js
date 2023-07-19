@@ -15,9 +15,11 @@ import { FiZoomIn } from "react-icons/fi";
 import { t } from "i18next";
 import { setID } from "redux/Actions/SettingActions";
 import ReactTooltip from "react-tooltip";
+import { setViewID } from "redux/Actions/SideBarActions";
 
 const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) => {
   const { title, handleModalOpen, handleUpdate, serviceId } = useToggleDrawer();
+  console.log("🚀 ~ file: DiscountTable.js:21 ~ DiscountTable ~ serviceId:", serviceId)
   const { resData } = useDiscountSubmit(serviceId);
 
   const handleClick = (e) => {
@@ -37,17 +39,11 @@ const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) =>
     handleUpd(true);
   };
 
-  // const handleDeleteDiscount = async (id) => {
-  //   await DiscountServices.deleteDiscount(id);
-  //   notifySuccess("Deleted");
-  // };
 
-  // const resp = useAsync(DiscountServices.getAllDiscount);
   const ID = useSelector((state) => state.id);
   const dispatch=useDispatch()
   const getid = (id)=>{
-    dispatch(setID(id))
-    console.log(id)
+    dispatch(setViewID(id))
   }
 
   const handleMouseOver = (customerId, index) => {
@@ -175,7 +171,8 @@ const DiscountTable = ({ isCheck, setIsCheck, data, click,handleUpd,update }) =>
                       data-event="mouseenter focus"
                       data-event-off="mouseleave blur"
                     >
-                      {avatarStartIndex ? 4 : avatarStartIndex + dis?.customers?.length}
+                      {/* {avatarStartIndex ? 4 : avatarStartIndex + dis?.customers?.length} */}
+                {dis?.customers?.length>4?dis?.customers?.length-4:""}
                     </button>
 
                     <ReactTooltip

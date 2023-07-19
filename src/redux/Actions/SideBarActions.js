@@ -34,3 +34,9 @@ export const setID = (id) => {
     payload: id
   };
 };
+export const setViewID = (id) => {
+  return {
+    type: 'SET_VIEW_ID',
+    payload: id
+  };
+};
