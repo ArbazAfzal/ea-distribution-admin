@@ -22,10 +22,9 @@ module.exports = windmill({
       },
     },
     colors: {
-    
-      'green': '#A92E97',
-      
+      green: '#A92E97',
     },
+    
   },
  
 });
