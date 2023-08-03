@@ -18,7 +18,7 @@ const useStaffSubmit = (id) => {
   const [selectedDate, setSelectedDate] = useState(
     dayjs(new Date()).format("YYYY-MM-DD")
   );
-  const [language, setLanguage] = useState(lang);
+  const [language, setLanguage] = useState(lang); 
   const [resData, setResData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 

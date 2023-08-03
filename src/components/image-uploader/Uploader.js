@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { t } from "i18next";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
@@ -12,6 +12,7 @@ import { notifyError, notifySuccess } from "../../utils/toast";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Container from "./Container";
+import { SidebarContext } from "context/SidebarContext";
 
 cloudinary.config({
   cloud_name: process.env.REACT_APP_CLOUD_NAME,
@@ -27,6 +28,8 @@ const Uploader = ({ setImageUrl, imageUrl, product, folder }) => {
   const { data: globalSetting } = useAsync(SettingServices.getGlobalSetting);
 
   // console.log("data", data);
+  const { isDrawerOpen, closeDrawer, setIsUpdate, lang } =
+    useContext(SidebarContext);
 
   const { getRootProps, getInputProps, fileRejections } = useDropzone({
     accept: "image/*",
@@ -45,6 +48,10 @@ const Uploader = ({ setImageUrl, imageUrl, product, folder }) => {
   });
 
   useEffect(() => {
+    !isDrawerOpen && setFiles([])
+  }, [isDrawerOpen])
+
+  useEffect(() => {
     if (fileRejections) {
       fileRejections.map(({ file, errors }) => (
         <li key={file.path}>
@@ -54,8 +61,8 @@ const Uploader = ({ setImageUrl, imageUrl, product, folder }) => {
               <li key={e.code}>
                 {e.code === "too-many-files"
                   ? notifyError(
-                      `Maximum ${globalSetting?.number_of_image_per_product} Image Can be Upload!`
-                    )
+                    `Maximum ${globalSetting?.number_of_image_per_product} Image Can be Upload!`
+                  )
                   : notifyError(e.message)}
               </li>
             ))}
@@ -69,7 +76,7 @@ const Uploader = ({ setImageUrl, imageUrl, product, folder }) => {
         if (
           product &&
           imageUrl?.length + files?.length >
-            globalSetting?.number_of_image_per_product
+          globalSetting?.number_of_image_per_product
         ) {
           return notifyError(
             `Maximum ${globalSetting?.number_of_image_per_product} Image Can be Upload!`
@@ -127,7 +134,8 @@ const Uploader = ({ setImageUrl, imageUrl, product, folder }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
 
-  const thumbs = files.map((file) => (
+  const thumbs = Array.isArray(files) && files.map((file) => (
+
     <div key={file.name}>
       <div>
         <img
@@ -137,7 +145,10 @@ const Uploader = ({ setImageUrl, imageUrl, product, folder }) => {
         />
       </div>
     </div>
+
   ));
+
+
 
   useEffect(
     () => () => {
@@ -150,7 +161,7 @@ const Uploader = ({ setImageUrl, imageUrl, product, folder }) => {
   const handleRemoveImage = async (img) => {
     try {
       // const url = img.substring(img.length - 25);
-      const url = img.split("/").pop().split(".")[0];
+      const url = img && img.split("/").pop().split(".")[0];
       const public_id = `${folder}/${url}`;
 
       const res = await cloudinary.v2.uploader.destroy(public_id);

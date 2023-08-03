@@ -9,6 +9,7 @@ const TextAreaCom = ({
   required,
   type,
   value,
+  onChange
 }) => {
   return (
     <>
@@ -22,6 +23,7 @@ const TextAreaCom = ({
         placeholder={placeholder}
         name={name}
         value={value}
+        onChange={onChange}
         rows="4"
         spellCheck="false"
       />

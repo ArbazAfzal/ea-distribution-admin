@@ -1,3 +1,34 @@
+// import React from "react";
+// import { Input } from "@windmill/react-ui";
+
+// const InputArea = ({
+//   register,
+//   defaultValue,
+//   required,
+//   name,
+//   label,
+//   type,
+//   placeholder,
+  
+// }) => {
+//   return (
+//     <>
+//       <Input
+//         {...register(`${name}`, {
+//           required: required ? false : `${label} is required!`,
+//         })}
+//         defaultValue={defaultValue}
+//         type={type}
+//         placeholder={placeholder}
+//         name={name}
+//         className="border h-12 text-sm focus:outline-none block w-full bg-gray-100 dark:bg-white border-transparent focus:bg-white"
+//       />
+//     </>
+//   );
+// };
+
+// export default InputArea;
+
 import React from "react";
 import { Input } from "@windmill/react-ui";
 
@@ -9,7 +40,8 @@ const InputArea = ({
   label,
   type,
   placeholder,
-  
+  value, // Receive the value prop from the parent
+  onChange, // Receive the onChange prop from the parent
 }) => {
   return (
     <>
@@ -21,6 +53,8 @@ const InputArea = ({
         type={type}
         placeholder={placeholder}
         name={name}
+        value={value} // Set the value prop to the value received from the parent
+        onChange={onChange} // Set the onChange prop to the onChange function received from the parent
         className="border h-12 text-sm focus:outline-none block w-full bg-gray-100 dark:bg-white border-transparent focus:bg-white"
       />
     </>
@@ -28,3 +62,4 @@ const InputArea = ({
 };
 
 export default InputArea;
+
