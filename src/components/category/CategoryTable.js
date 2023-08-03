@@ -22,7 +22,7 @@ const CategoryTable = ({
   showChild,
 }) => {
   const { title, serviceId, handleModalOpen, handleUpdate } = useToggleDrawer();
-
+console.log(categories," categories")
   const handleClick = (e) => {
     const { id, checked } = e.target;
     setIsCheck([...isCheck, id]);

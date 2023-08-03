@@ -38,7 +38,7 @@ const Category = () => {
 
   const { data, loading } = useAsync(CategoryServices.getAllCategory);
   const { data: getAllCategories } = useAsync(CategoryServices.getAllCategories);
-
+console.log(data,"000000000")
   const { handleDeleteMany, allId, handleUpdateMany, serviceId } = useToggleDrawer();
 
   const { t } = useTranslation();

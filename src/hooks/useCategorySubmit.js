@@ -9,13 +9,22 @@ const useCategorySubmit = (id, data) => {
     useContext(SidebarContext);
   const [resData, setResData] = useState({});
   const [checked, setChecked] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState();
+  const [orderNo, setOrderNo] = useState("")
+  const [catName, setCatName] = useState()
+  const [parentName, setParentName] = useState("")
+  const [bannerImage, setBannerImage] = useState([])
+  const [metaImage, setMetaImage] = useState()
+  const [metaTitle, setMetaTitle] = useState("")
+  const [metaDescription, setMetaDescription] = useState("")
+  const [attributes, setAttributes] = useState("")
+  const [type, setType] = useState("")
   const [children, setChildren] = useState([]);
   const [language, setLanguage] = useState(lang);
   const [published, setPublished] = useState(true);
   const [selectCategoryName, setSelectCategoryName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  console.log(metaImage, "-----", bannerImage, "++++++++++++", imageUrl, "))))))))))))")
   const {
     register,
     handleSubmit,
@@ -25,26 +34,36 @@ const useCategorySubmit = (id, data) => {
     formState: { errors },
   } = useForm();
 
-  // console.log("lang", lang, language);
+
 
   const onSubmit = async ({ name, description }) => {
     try {
       setIsSubmitting(true);
       const categoryData = {
+        // name: {
+        //   [catName.en]: name,
+        // },
+
         name: {
           [language]: name,
         },
         description: { [language]: description ? description : "" },
         parentId: checked ? checked : undefined,
         parentName: selectCategoryName ? selectCategoryName : "Home",
-        // parentName: selectCategoryName ? selectCategoryName : 'Home',
-
+        orderNo: orderNo ? orderNo : "",
+        parentName: parentName,
+        type: type ? type : "main",
+        bannerImage: [bannerImage],
         icon: imageUrl,
+        metaImage: metaImage,
+        metaTitle: metaTitle,
+        metaDescription: metaDescription,
+        attributes: attributes,
         status: published ? "show" : "hide",
         lang: language,
       };
 
-      // console.log('category submit', categoryData);
+      console.log(categoryData, "meta")
 
       if (id) {
         const res = await CategoryServices.updateCategory(id, categoryData);
@@ -55,6 +74,7 @@ const useCategorySubmit = (id, data) => {
         reset();
       } else {
         const res = await CategoryServices.addCategory(categoryData);
+        console.log(res, "category")
         setIsUpdate(true);
         setIsSubmitting(false);
         notifySuccess(res.message);
@@ -75,23 +95,43 @@ const useCategorySubmit = (id, data) => {
     }
   };
 
+ 
+
   useEffect(() => {
     if (!isDrawerOpen) {
       setResData({});
       setValue("name");
       setValue("parentId");
       setValue("parentName");
-      setValue("description");
+      setValue("metadescription");
       setValue("icon");
-      setImageUrl("");
+      // setValue("imageUrl")
+      // setValue("metaImage")
+      // setValue("bannerImage")
+      setValue("")
+      setImageUrl(null);
+      setOrderNo("");
+      setParentName('');
+      setBannerImage(null)
+      setMetaImage(null)
+      setMetaTitle("")
+      setMetaDescription("")
+      setAttributes("")
+      setType("")
+      setCatName('')
       setPublished(true);
       clearErrors("name");
+      clearErrors("attributes")
+      clearErrors("orderNumber")
+      clearErrors("type")
+      clearErrors('metaTitle')
       clearErrors("parentId");
-      clearErrors("parentName");
-      clearErrors("description");
+      clearErrors("parentname");
+      clearErrors("metadescription");
       setSelectCategoryName("Home");
       setLanguage(lang);
       setValue("language", language);
+
 
       if (data !== undefined && data[0]?._id !== undefined) {
         setChecked(data[0]._id);
@@ -106,17 +146,33 @@ const useCategorySubmit = (id, data) => {
 
           if (res) {
             setResData(res);
-            setValue("name", res.name[language ? language : "en"]);
+           // setValue("name", res.name.en[catName ? catName : "en"]);
+             setValue("name", res.name[language ? language : "en"]);
             setValue(
               "description",
               res.description[language ? language : "en"]
             );
+            
             setValue("language", language);
             setValue("parentId", res.parentId);
-            setValue("parentName", res.parentName);
+            setValue("parentname", res.parentName);
+            setValue("type", res.type)
+            setValue("metaTitle",res.metaTitle)
+            setValue("attributes", res.attributes)
+            setValue("orderNumber",res.orderNo)
+           // setValue("name",res.name.en)
             setSelectCategoryName(res.parentName);
             setChecked(res.parentId);
-            setImageUrl(res.icon);
+            setImageUrl(res?.icon);
+            setOrderNo(res?.orderNo)
+            setParentName(res?.parentName)
+            setBannerImage(res.bannerImage)
+            setMetaImage(res.metaImage)
+            setCatName(res.catName)
+            setMetaTitle(res.metaTitle)
+            setMetaDescription(res.metaDescription)
+            setAttributes(res.attributes)
+            setType(res.type)
             setPublished(res.status === "show" ? true : false);
           }
         } catch (err) {
@@ -124,7 +180,7 @@ const useCategorySubmit = (id, data) => {
         }
       })();
     }
-  }, [id, setValue, isDrawerOpen, language, clearErrors, data, lang]);
+  }, [id, setValue, isDrawerOpen, language, clearErrors, data, lang,]);
 
   return {
     register,
@@ -133,6 +189,22 @@ const useCategorySubmit = (id, data) => {
     errors,
     imageUrl,
     setImageUrl,
+    orderNo,
+    setOrderNo,
+    parentName,
+    setParentName,
+    type,
+    setType,
+    bannerImage,
+    setBannerImage,
+    metaTitle,
+    setMetaTitle,
+    metaDescription,
+    setMetaDescription,
+    metaImage,
+    setMetaImage,
+    attributes,
+    setAttributes,
     children,
     setChildren,
     published,
@@ -143,6 +215,7 @@ const useCategorySubmit = (id, data) => {
     selectCategoryName,
     setSelectCategoryName,
     handleSelectLanguage,
+    setCatName, catName
   };
 };
 
