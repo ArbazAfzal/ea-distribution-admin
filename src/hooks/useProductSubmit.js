@@ -16,7 +16,7 @@ import CustomerServices from "services/CustomerServices";
 
 
 const useProductSubmit = (id) => {
- 
+
   const location = useLocation();
   const { isDrawerOpen, closeDrawer, setIsUpdate, lang } =
     useContext(SidebarContext);
@@ -53,12 +53,26 @@ const useProductSubmit = (id) => {
   const [imgId, setImgId] = useState("");
   const [isBulkUpdate, setIsBulkUpdate] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState([]);
-  const [defaultCategory, setDefaultCategory] = useState([]);
+  //const [defaultCategory, setDefaultCategory] = useState([]);
   const [resData, setResData] = useState({});
   const [language, setLanguage] = useState(lang);
   const [openModal, setOpenModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [slug, setSlug] = useState("");
+  const [weight, setweight] = useState("")
+  const [selectedBrand, setSelectedBrand] = useState("")
+  const [selectedUnit, setSelectedUnit] = useState('')
+  const [thumbnailImage, setThumbnailImage] = useState('')
+  const [videoProvider, setVideoProvider] = useState('')
+  const [videoLink, setVideoLink] = useState('')
+  const [externalLink, setExternalLink] = useState("")
+  const [externalLinkButtonText, setExternalLinkButtonText] = useState('')
+  const [metaTitle, setMetaTitle] = useState('')
+  const [metaImage, setMetaImage] = useState('')
+  const [category, setCategory] = useState('')
+
+  const [isFeatured, setIsFeatured] = useState(true)
+  const  [isPublished,setisPublished]=useState(true)
 
 
   // console.log("lang", lang);
@@ -81,6 +95,12 @@ const useProductSubmit = (id) => {
   //     return obj
   //   })
   //   console.log(options, "datatat")
+  const [minimumPurchaseQuantity, setMinimumPurchaseQuantity] = useState("")
+  const [discountPrice, setDiscountPrice] = useState("")
+  const [point, setPoint] = useState('')
+  const [metaDescription, setMetaDescription] = useState('')
+  const [pdfSpecification, setPdfSpecification] = useState('')
+
   const onCloseModal = () => setOpenModal(false);
   const {
     register,
@@ -101,10 +121,10 @@ const useProductSubmit = (id) => {
           "SalePrice must be less then or equal of product price!"
         );
       }
-      if (!defaultCategory[0]) {
-        setIsSubmitting(false);
-        return notifyError("Default Category is required!");
-      }
+      // if (!defaultCategory[0]) {
+      //   setIsSubmitting(false);
+      //   return notifyError("Default Category is required!");
+      // }
 
       const updatedVariants = variants.map((v, i) => {
         const newObj = {
@@ -124,7 +144,11 @@ const useProductSubmit = (id) => {
       setSku(data.sku);
       setOriginalPrice(data.originalPrice);
 
+
+
       const productData = {
+        brand: selectedBrand,
+        unit: selectedUnit,
         productId: productId,
         sku: data.sku || "",
         barcode: data.barcode || "",
@@ -136,8 +160,8 @@ const useProductSubmit = (id) => {
           ? data.slug
           : data.title.toLowerCase().replace(/[^A-Z0-9]+/gi, "-"),
 
-        categories: selectedCategory.map((item) => item._id),
-        category: defaultCategory[0]._id,
+        // categories: selectedCategory.map((item) => item._id),
+        // category: defaultCategory[0]._id,
 
         image: imageUrl,
         stock: variants?.length < 1 ? data.stock : Number(totalStock),
@@ -150,11 +174,31 @@ const useProductSubmit = (id) => {
         },
         isCombination: updatedVariants?.length > 0 ? isCombination : false,
         variants: isCombination ? updatedVariants : [],
-      
-        
+
+        weight: weight,
+        minimumPurchaseQuantity: minimumPurchaseQuantity,
+        tag: tag,
+        barcode: barcode,
+        thumbnailImage: thumbnailImage,
+        videoProvider: videoProvider,
+        videoLink: videoLink,
+        discountPrice: discountPrice,
+        point: point,
+        quantity: quantity,
+        sku: sku,
+        externalLink: externalLink,
+        externalLinkButtonText: externalLinkButtonText,
+        metaDescription: metaDescription,
+        metaTitle: metaTitle,
+        metaImage: metaImage,
+        pdfSpecification: pdfSpecification,
+        category: category,
+        isFeatured: isFeatured,
+        isPublished:isPublished
+
       };
 
-      // console.log("productData ===========>", productData, "data", data);
+      console.log("productData", productData, "data", data);
       // return setIsSubmitting(false);
 
       if (updatedId) {
@@ -269,9 +313,9 @@ const useProductSubmit = (id) => {
       setValues({});
       setTotalStock(0);
       setSelectedCategory([]);
-      setDefaultCategory([]);
+      //setDefaultCategory([]);
       if (location.pathname === "/products") {
-        resetRefTwo?.current?.resetSelectedValues();
+        // resetRefTwo?.current?.resetSelectedValues();
       }
 
       clearErrors("sku");
@@ -339,7 +383,7 @@ const useProductSubmit = (id) => {
             );
 
             setSelectedCategory(res.categories);
-            setDefaultCategory([res?.category]);
+            // setDefaultCategory([res?.category]);
             setTag(JSON.parse(res.tag));
             setImageUrl(res.image);
             setVariants(res.variants);
@@ -655,10 +699,16 @@ const useProductSubmit = (id) => {
     resetRefTwo,
     handleSkuBarcode,
     handleProductTap,
+    minimumPurchaseQuantity,
+    setMinimumPurchaseQuantity,
+    weight,
+    setweight,
     selectedCategory,
     setSelectedCategory,
-    setDefaultCategory,
-    defaultCategory,
+    //setDefaultCategory,
+    //defaultCategory,
+    barcode,
+    setBarcode,
     handleProductSlug,
     handleSelectLanguage,
     handleIsCombination,
@@ -669,7 +719,45 @@ const useProductSubmit = (id) => {
     handleSelectImage,
     handleSelectInlineImage,
     handleGenerateCombination,
+    thumbnailImage,
+    setThumbnailImage,
     updatedId,
+    selectedBrand,
+    setSelectedBrand,
+    selectedUnit,
+    setSelectedUnit,
+    videoLink,
+    setVideoLink,
+    videoProvider,
+    setVideoProvider,
+    discountPrice,
+    setDiscountPrice,
+    point,
+    setPoint,
+    quantity,
+    setQuantity,
+    sku,
+    setSku,
+    externalLink,
+    setExternalLink,
+    externalLinkButtonText,
+    setExternalLinkButtonText,
+    metaDescription,
+    setMetaDescription,
+    metaTitle,
+    setMetaTitle,
+    metaImage,
+    setMetaImage,
+    pdfSpecification,
+    setPdfSpecification,
+    category,
+    setCategory,
+
+    isPublished,
+    setisPublished,
+    isFeatured,
+    setIsFeatured
+
 
 
   };

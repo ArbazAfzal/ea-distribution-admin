@@ -9,7 +9,7 @@ import {
   Table,
 } from "@windmill/react-ui";
 import Multiselect from "multiselect-react-dropdown";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { MultiSelect } from "react-multi-select-component";
 import { Modal } from "react-responsive-modal";
@@ -38,6 +38,8 @@ import useAsync from "hooks/useAsync";
 import CustomerServices from "services/CustomerServices";
 import Switcher from "components/bth";
 import ShowHideButton from "components/table/ShowHideButton";
+import ProductServices from "services/ProductServices";
+import CategoryServices from "services/CategoryServices";
 
 //internal import
 
@@ -78,8 +80,8 @@ const ProductDrawer = ({ id }) => {
     handleProductTap,
     selectedCategory,
     setSelectedCategory,
-    setDefaultCategory,
-    defaultCategory,
+    // setDefaultCategory,
+    // defaultCategory,
     handleProductSlug,
     handleSelectLanguage,
     handleIsCombination,
@@ -90,8 +92,51 @@ const ProductDrawer = ({ id }) => {
     handleSelectImage,
     handleSelectInlineImage,
     handleGenerateCombination,
+    minimumPurchaseQuantity,
+    setMinimumPurchaseQuantity,
+    weight,
+    setweight,
+    barcode,
+    setBarcode,
+    selectedBrand,
+    setSelectedBrand,
+    selectedUnit,
+    setSelectedUnit,
+    thumbnailImage,
+    setThumbnailImage,
+    videoLink,
+    setVideoLink,
+    videoProvider,
+    setVideoProvider,
+    discountPrice,
+    setDiscountPrice,
+    point,
+    setPoint,
+    quantity,
+    setQuantity,
+    sku,
+    setSku,
+    externalLink,
+    setExternalLink,
+    externalLinkButtonText,
+    setExternalLinkButtonText,
+    metaDescription,
+    setMetaDescription,
+    metaTitle,
+    setMetaTitle,
+    metaImage,
+    setMetaImage,
+    pdfSpecification,
+    setPdfSpecification,
+    category,
+    setCategory,
+    isPublished,
+    setisPublished,
+    isFeatured,
+    setIsFeatured
   } = useProductSubmit(id);
 
+  console.log(minimumPurchaseQuantity, "5")
   const currency = globalSetting?.default_currency || "$";
 
   const options = [
@@ -99,9 +144,63 @@ const ProductDrawer = ({ id }) => {
     { value: 'strawberry', label: 'Strawberry' },
     { value: 'vanilla', label: 'Vanilla' },
   ];
-  const handleUploadMultipleImages = (e) => {
+  const [unit, setUnit] = useState([])
+  // const [selectedUnit, setSelectedUnit] = useState(null)
+  useEffect(() => {
 
-  }
+    const fetchData = async () => {
+      const data = await ProductServices.getUnit();
+      setUnit(data)
+    }
+    fetchData()
+      .catch(console.error);
+  }, [])
+
+  const Unitdata = Array.isArray(unit) ? unit.map((item) => ({ label: item.name })) : [];
+
+
+  const handleUnitChange = (selectedOption) => {
+    setSelectedUnit(selectedOption);
+  };
+
+  const [brand, setBrand] = useState([])
+  //const [selectedBrand, setSelectedBrand] = useState(null)
+  useEffect(() => {
+
+    const fetchData = async () => {
+      const data = await ProductServices.getBrand();
+      setBrand(data)
+    }
+    fetchData()
+      .catch(console.error);
+  }, [])
+
+  const Brand = Array.isArray(brand) ? brand.map((item) => ({ value: item._id, label: item.name })) : [];
+  console.log(Brand, "brand")
+
+  const handleBrandChange = (selectedOption) => {
+    setSelectedBrand(selectedOption);
+  };
+
+ 
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await CategoryServices.getAllCategory();
+      setCategory(data)
+      console.log(data,"dat")
+
+    }
+    fetchData()
+    .catch(console.error);
+
+  }, [])
+
+  const getcategory = Array.isArray(category) ? category.map((item) => ({ value: item._id, label: item.name.en })) : [];
+ 
+  const handleCategoryChange = (getcategory) => {
+    setCategory(getcategory.value);
+    console.log(getcategory,"selectedOption")
+  };
 
   return (
     <>
@@ -201,8 +300,11 @@ const ProductDrawer = ({ id }) => {
                     <LabelArea label={t("Category*")} />
                     <div className="col-span-8 sm:col-span-4">
                       <RSelect
-                        options={options}
-                        placeholder="Category"
+                        options={getcategory}
+                        placeholder=" Select Category"
+                        value={category}
+                        onChange={handleCategoryChange}
+                        isClearable
                       // onChange={(e) => {
                       //   formik?.setFieldValue("categoryId", e);
                       // }}
@@ -221,8 +323,11 @@ const ProductDrawer = ({ id }) => {
                     <LabelArea label={t("Brand")} />
                     <div className="col-span-8 sm:col-span-4">
                       <RSelect
-                        options={options}
+                        options={Brand}
                         placeholder="Select Brand"
+                        value={selectedBrand}
+                        onChange={handleBrandChange}
+                        isClearable
                       // onChange={(e) => {
                       //   formik?.setFieldValue("categoryId", e);
                       // }}
@@ -241,14 +346,22 @@ const ProductDrawer = ({ id }) => {
                   <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                     <LabelArea label="Unit" />
                     <div className="col-span-8 sm:col-span-4">
-                      <InputArea
-                        register={register}
-                        label="Name"
-                        name="name"
-                        type="text"
-                        placeholder="Unit (e.g KG,Pc etc)"
-
-                      />
+                      <RSelect
+                        options={Unitdata}
+                        placeholder="Select Unit"
+                        value={selectedUnit}
+                        onChange={handleUnitChange}
+                        isClearable
+                      // onChange={(e) => {
+                      //   setUnit("unit", e);
+                      // }}
+                      // error={formik?.errors?.categoryId}
+                      // touched={formik?.touched?.categoryId}
+                      // onBlur={formik?.handleBlur}
+                      // value={formik?.values?.categoryId}
+                      // name="category"
+                      // id="category"
+                      ></RSelect>
                       <Error errorName={errors.name} />
                     </div>
                   </div>
@@ -258,9 +371,11 @@ const ProductDrawer = ({ id }) => {
                     <div className="col-span-8 sm:col-span-4">
                       <InputArea
                         register={register}
-                        label="Name"
-                        name="name"
+                        label="weight"
+                        name="weight"
                         type="number"
+                        value={weight}
+                        onChange={(e) => setweight(e.target.value)}
                         placeholder="0.00"
 
                       />
@@ -274,9 +389,11 @@ const ProductDrawer = ({ id }) => {
                     <div className="col-span-8 sm:col-span-4">
                       <InputArea
                         register={register}
-                        label="Name"
-                        name="name"
+                        label="minimumPurchaseQuantity"
+                        name="minimumPurchaseQuantity"
                         type="number"
+                        value={minimumPurchaseQuantity}
+                        onChange={(e) => setMinimumPurchaseQuantity(e.target.value)}
                         placeholder="1"
 
                       />
@@ -290,9 +407,11 @@ const ProductDrawer = ({ id }) => {
                     <div className="col-span-8 sm:col-span-4">
                       <InputArea
                         register={register}
-                        label="Name"
-                        name="name"
+                        label="tag"
+                        name="tag"
                         type="text"
+                        value={tag}
+                        onChange={(e) => setTag(e.target.value)}
                         placeholder="Type and hit enter to add a tag"
 
                       />
@@ -310,6 +429,8 @@ const ProductDrawer = ({ id }) => {
                         label="Name"
                         name="name"
                         type="text"
+                        value={barcode}
+                        onChange={(e) => setBarcode(e.target.value)}
                         placeholder="Barcode"
 
                       />
@@ -340,14 +461,15 @@ const ProductDrawer = ({ id }) => {
                   <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                     <LabelArea label={t("Gallery Image (500x500)")} />
                     <div className="col-span-8 sm:col-span-4">
-                      <div className="bg-white border-solid	border-2 border-gray">
-                        <div className="border-solid border-2 bg-gray-200 p-2 inline-block">
-                          <label htmlFor="premiumPhoto">
-                            {/* <MdOutlineAdd  /> */}
-                            Browse
-                          </label>
+                      <div className=" border-gray">
+                        <div className="p-2 inline-block">
+                          <Uploader
+                            product
+                            folder="product"
+                            imageUrl={imageUrl}
+                            setImageUrl={setImageUrl}
+                          />
                         </div>
-                        <input type="file" id="premiumPhoto" multiple={true} onChange={(e) => handleUploadMultipleImages(e, "photos")} />
                       </div>
 
                     </div>
@@ -357,14 +479,15 @@ const ProductDrawer = ({ id }) => {
                   <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                     <LabelArea label={t("Thumbnail Image (300x300)")} />
                     <div className="col-span-8 sm:col-span-4">
-                      <div className="bg-white border-solid	border-2 border-gray">
-                        <div className="border-solid border-2 bg-gray-200 p-2 inline-block">
-                          <label htmlFor="premiumPhoto">
-                            {/* <MdOutlineAdd  /> */}
-                            Browse
-                          </label>
+                      <div className=" border-gray">
+                        <div className="p-2 inline-block">
+                          <Uploader
+                            folder="product"
+                            imageUrl={thumbnailImage}
+                            setImageUrl={setThumbnailImage}
+                          />
                         </div>
-                        <input type="file" id="premiumPhoto" multiple={true} onChange={(e) => handleUploadMultipleImages(e, "photos")} />
+
                       </div>
 
                     </div>
@@ -383,8 +506,10 @@ const ProductDrawer = ({ id }) => {
                     <div className="col-span-8 sm:col-span-4">
                       <InputArea
                         register={register}
-                        label="Name"
-                        name="name"
+                        label="videoProvide"
+                        name="videoProvide"
+                        value={videoProvider}
+                        onChange={(e) => setVideoProvider(e.target.value)}
                         type="text"
                         placeholder='YouTube'
 
@@ -399,9 +524,11 @@ const ProductDrawer = ({ id }) => {
                     <div className="col-span-8 sm:col-span-4">
                       <InputArea
                         register={register}
-                        label="Name"
-                        name="name"
+                        label="videoLink"
+                        name="videoLink"
                         type="text"
+                        value={videoLink}
+                        onChange={(e) => setVideoLink(e.target.value)}
                         placeholder='Video Link'
                       />
                       <span>use proper link without extra paramater.Dont use short share link/embeded iframe code</span>
@@ -470,10 +597,11 @@ const ProductDrawer = ({ id }) => {
                       <InputArea
                         register={register}
                         required="false"
-                        label='unitprice'
-                        name="unitprice"
+                        label='discount'
+                        name="discount"
                         type="text"
-                        placeholder='Select data'
+
+                        placeholder='Select data Range'
                       />
                     </div>
                   </div>
@@ -485,8 +613,10 @@ const ProductDrawer = ({ id }) => {
                       <InputArea
                         register={register}
                         required="false"
-                        label='unitprice'
-                        name="unitprice"
+                        label='discountPrice'
+                        name="discountPrice"
+                        value={discountPrice}
+                        onChange={(e) => setDiscountPrice(e.target.value)}
                         type="text"
                         placeholder='Discount'
                       />
@@ -508,9 +638,12 @@ const ProductDrawer = ({ id }) => {
                       <InputArea
                         register={register}
                         required="false"
-                        label='unitprice'
-                        name="unitprice"
+                        label='point'
+                        name="point"
+                        value={point}
+                        onChange={(e) => setPoint(e.target.value)}
                         type="number"
+
                         placeholder='0'
                       />
                     </div>
@@ -539,6 +672,9 @@ const ProductDrawer = ({ id }) => {
                         required="false"
                         label={t("ProductSKU")}
                         name="sku"
+                        value={sku}
+                        onChange={(e) => setSku(e.target.value)}
+
                         type="text"
                         placeholder={t("ProductSKU")}
                       />
@@ -552,8 +688,10 @@ const ProductDrawer = ({ id }) => {
                       <InputArea
                         register={register}
                         required="false"
-                        label='unitprice'
-                        name="unitprice"
+                        label='externalLink'
+                        name="externalLink"
+                        value={externalLink}
+                        onChange={(e) => setExternalLink(e.target.value)}
                         type="text"
                         placeholder='External Link'
                       />
@@ -567,8 +705,10 @@ const ProductDrawer = ({ id }) => {
                       <InputArea
                         register={register}
                         required="false"
-                        label='unitprice'
-                        name="unitprice"
+                        label='externalLinkButtonText'
+                        name="externalLinkButtonText"
+                        value={externalLinkButtonText}
+                        onChange={(e) => setExternalLinkButtonText(e.target.value)}
                         type="text"
                         placeholder='External Link button text'
                       />
@@ -595,6 +735,8 @@ const ProductDrawer = ({ id }) => {
                         })}
                         name="description"
                         placeholder={t("ProductDescription")}
+                        value={metaDescription}
+                        onChange={(e) => setMetaDescription(e.target.value)}
                         rows="4"
                         spellCheck="false"
                       />
@@ -614,14 +756,15 @@ const ProductDrawer = ({ id }) => {
                   <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                     <LabelArea label={t("PDF Specification")} />
                     <div className="col-span-8 sm:col-span-4">
-                      <div className="bg-white border-solid	border-2 border-gray">
-                        <div className="border-solid border-2 bg-gray-200 p-2 inline-block">
-                          <label htmlFor="premiumPhoto">
-                            {/* <MdOutlineAdd  /> */}
-                            Browse
-                          </label>
+                      <div className=" border-gray">
+                        <div className=" p-2 inline-block">
+                          <Uploader
+                            accept=".pdf"
+                            imageUrl={pdfSpecification}
+                            setImageUrl={setPdfSpecification}
+                          />
                         </div>
-                        <input type="file" id="premiumPhoto" multiple={true} onChange={(e) => handleUploadMultipleImages(e, "photos")} />
+
                       </div>
 
                     </div>
@@ -641,8 +784,10 @@ const ProductDrawer = ({ id }) => {
                     <div className="col-span-8 sm:col-span-4">
                       <InputArea
                         register={register}
-                        label="Name"
-                        name="name"
+                        label="metaTitle"
+                        name="metaTitle"
+                        value={metaTitle}
+                        onChange={(e) => setMetaTitle(e.target.value)}
                         type="text"
                         placeholder='Meta Title'
 
@@ -673,14 +818,15 @@ const ProductDrawer = ({ id }) => {
                   <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                     <LabelArea label={t("Meta Image")} />
                     <div className="col-span-8 sm:col-span-4">
-                      <div className="bg-white border-solid	border-2 border-gray">
-                        <div className="border-solid border-2 bg-gray-200 p-2 inline-block">
-                          <label htmlFor="premiumPhoto">
-                            {/* <MdOutlineAdd  /> */}
-                            Browse
-                          </label>
+                      <div className="border-gray">
+                        <div className="p-2 inline-block">
+                          <Uploader
+                            folder="product"
+                            imageUrl={metaImage}
+                            setImageUrl={setMetaImage}
+                          />
                         </div>
-                        <input type="file" id="premiumPhoto" multiple={true} onChange={(e) => handleUploadMultipleImages(e, "photos")} />
+
                       </div>
 
                     </div>
@@ -742,8 +888,10 @@ const ProductDrawer = ({ id }) => {
                       <div className="col-span-8 sm:col-span-4">
                         <InputArea
                           register={register}
-                          label="Name"
-                          name="name"
+                          label="quantity"
+                          name="quanti"
+                          value={quantity}
+                          onChange={(e) => setQuantity(e.target.value)}
                           type="number"
                           placeholder="1"
 
@@ -951,7 +1099,7 @@ const ProductDrawer = ({ id }) => {
                         <InputArea
                           register={register}
                           label="Name"
-                          name="name"
+                          name="tax"
                           type="number"
                           placeholder='0'
 
@@ -989,20 +1137,20 @@ const ProductDrawer = ({ id }) => {
                         <RSelect
                           options={options}
 
-                          >
-                          </RSelect>
+                        >
+                        </RSelect>
                       </div>
                     </div>
                   </div>
 
 
-              {/* </div>
+                  {/* </div>
             </div> */}
                 </div>
 
 
-        <div>
-          {/* <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                <div>
+                  {/* <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                 <LabelArea label={t("ProductImage")} />
                 <div className="col-span-8 sm:col-span-4">
                   <Uploader
@@ -1013,9 +1161,9 @@ const ProductDrawer = ({ id }) => {
                   />
                 </div>
               </div> */}
-        </div>
+                </div>
 
-        {/* <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                {/* <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                   <LabelArea label={t("ProductSKU")} />
                   <div className="col-span-8 sm:col-span-4">
                     <InputArea
@@ -1030,8 +1178,8 @@ const ProductDrawer = ({ id }) => {
                   </div>
                 </div> */}
 
-        <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-          {/* <LabelArea label={t("ProductBarcode")} />
+                <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                  {/* <LabelArea label={t("ProductBarcode")} />
                   <div className="col-span-8 sm:col-span-4">
                     <InputArea
                       register={register}
@@ -1043,10 +1191,10 @@ const ProductDrawer = ({ id }) => {
                     />
                     <Error errorName={errors.barcode} />
                   </div> */}
-        </div>
+                </div>
 
-        <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-          {/* <LabelArea label={t("Category")} />
+                <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                  {/* <LabelArea label={t("Category")} />
                   <div className="col-span-8 sm:col-span-4">
                     <ParentCategory
                       lang={language}
@@ -1055,29 +1203,29 @@ const ProductDrawer = ({ id }) => {
                       setDefaultCategory={setDefaultCategory}
                     />
                   </div> */}
-        </div>
+                </div>
 
-        <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-          <LabelArea label={t("DefaultCategory")} />
-          <div className="col-span-8 sm:col-span-4">
-            <Multiselect
-              displayValue="name"
-              isObject={true}
-              singleSelect={true}
-              ref={resetRefTwo}
-              hidePlaceholder={true}
-              onKeyPressFn={function noRefCheck() { }}
-              onRemove={function noRefCheck() { }}
-              onSearch={function noRefCheck() { }}
-              onSelect={(v) => setDefaultCategory(v)}
-              selectedValues={defaultCategory}
-              options={selectedCategory}
-              placeholder={"Default Category"}
-            ></Multiselect>
-          </div>
-        </div>
+                {/* <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                  <LabelArea label={t("DefaultCategory")} />
+                  <div className="col-span-8 sm:col-span-4">
+                    <Multiselect
+                      displayValue="name"
+                      isObject={true}
+                      singleSelect={true}
+                      ref={resetRefTwo}
+                      hidePlaceholder={true}
+                      onKeyPressFn={function noRefCheck() { }}
+                      onRemove={function noRefCheck() { }}
+                      onSearch={function noRefCheck() { }}
+                     // onSelect={(v) => setDefaultCategory(v)}
+                      selectedValues={defaultCategory}
+                      options={selectedCategory}
+                      placeholder={"Default Category"}
+                    ></Multiselect>
+                  </div>
+                </div> */}
 
-        {/* <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                {/* <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                   <LabelArea label="Product Price" />
                   <div className="col-span-8 sm:col-span-4">
                     <InputValue
@@ -1096,7 +1244,7 @@ const ProductDrawer = ({ id }) => {
                     <Error errorName={errors.originalPrice} />
                   </div>
                 </div> */}
-        {/* 
+                {/* 
                 <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                   <LabelArea label={t("SalePrice")} />
                   <div className="col-span-8 sm:col-span-4">
@@ -1116,7 +1264,7 @@ const ProductDrawer = ({ id }) => {
                   </div>
                 </div> */}
 
-        {/* <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6 relative">
+                {/* <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6 relative">
                   <LabelArea label={t("ProductQuantity")} />
                   <div className="col-span-8 sm:col-span-4">
                     <InputValueFive
@@ -1132,7 +1280,7 @@ const ProductDrawer = ({ id }) => {
                   </div>
                 </div> */}
 
-        {/* <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                {/* <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                   <LabelArea label={t("ProductSlug")} />
                   <div className="col-span-8 sm:col-span-4">
                     <Input
@@ -1150,7 +1298,7 @@ const ProductDrawer = ({ id }) => {
                   </div>
                 </div> */}
 
-        {/* <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                {/* <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                   <LabelArea label={t("ProductTag")} />
                   <div className="col-span-8 sm:col-span-4">
                     <ReactTagInput
@@ -1162,151 +1310,151 @@ const ProductDrawer = ({ id }) => {
                 </div> */}
 
 
-      </div>
+              </div>
 
-    </div >
+            </div >
           )}
 
-{
-  tapValue === "Combination" &&
-  isCombination &&
-  (attribue.length < 1 ? (
-    <div
-      className="bg-teal-100 border border-teal-600 rounded-md text-teal-900 px-4 py-3 m-4"
-      role="alert"
-    >
-      <div className="flex">
-        <div className="py-1">
-          <svg
-            className="fill-current h-6 w-6 text-teal-500 mr-4"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-          >
-            <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
-          </svg>
-        </div>
-        <div>
-          <p className="text-sm">
-            {t("AddCombinationsDiscription")}{" "}
-            <Link to="/attributes" className="font-bold">
-              {t("AttributesFeatures")}
-            </Link>
-            {t("AddCombinationsDiscriptionTwo")}
-          </p>
-        </div>
-      </div>
-    </div>
-  ) : (
-    <div className="p-6">
-      {/* <h4 className="mb-4 font-semibold text-lg">Variants</h4> */}
-      <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-3 md:gap-3 xl:gap-3 lg:gap-2 mb-3">
-        <MultiSelect
-          options={attTitle}
-          value={attributes}
-          onChange={(v) => handleAddAtt(v)}
-          labelledBy="Select"
-        />
+          {
+            tapValue === "Combination" &&
+            isCombination &&
+            (attribue.length < 1 ? (
+              <div
+                className="bg-teal-100 border border-teal-600 rounded-md text-teal-900 px-4 py-3 m-4"
+                role="alert"
+              >
+                <div className="flex">
+                  <div className="py-1">
+                    <svg
+                      className="fill-current h-6 w-6 text-teal-500 mr-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm">
+                      {t("AddCombinationsDiscription")}{" "}
+                      <Link to="/attributes" className="font-bold">
+                        {t("AttributesFeatures")}
+                      </Link>
+                      {t("AddCombinationsDiscriptionTwo")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="p-6">
+                {/* <h4 className="mb-4 font-semibold text-lg">Variants</h4> */}
+                <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-3 md:gap-3 xl:gap-3 lg:gap-2 mb-3">
+                  <MultiSelect
+                    options={attTitle}
+                    value={attributes}
+                    onChange={(v) => handleAddAtt(v)}
+                    labelledBy="Select"
+                  />
 
-        {attributes?.map((attribute, i) => (
-          <div key={attribute._id}>
-            <div className="flex w-full h-10 justify-between font-sans rounded-tl rounded-tr bg-gray-200 px-4 py-3 text-left text-sm font-normal text-gray-700 hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
-              {"Select"}
-              {showingTranslateValue(attribute?.title, language)}
-            </div>
+                  {attributes?.map((attribute, i) => (
+                    <div key={attribute._id}>
+                      <div className="flex w-full h-10 justify-between font-sans rounded-tl rounded-tr bg-gray-200 px-4 py-3 text-left text-sm font-normal text-gray-700 hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+                        {"Select"}
+                        {showingTranslateValue(attribute?.title, language)}
+                      </div>
 
-            <AttributeOptionTwo
-              id={i + 1}
-              values={values}
-              lang={language}
-              attributes={attribute}
-              setValues={setValues}
-            />
-          </div>
-        ))}
-      </div>
+                      <AttributeOptionTwo
+                        id={i + 1}
+                        values={values}
+                        lang={language}
+                        attributes={attribute}
+                        setValues={setValues}
+                      />
+                    </div>
+                  ))}
+                </div>
 
-      <div className="flex justify-end mb-6">
-        {attributes?.length > 0 && (
-          <Button
-            onClick={handleGenerateCombination}
-            type="button"
-            className="mx-2"
-          >
-            <span className="text-xs">{t("GenerateVariants")}</span>
-          </Button>
-        )}
+                <div className="flex justify-end mb-6">
+                  {attributes?.length > 0 && (
+                    <Button
+                      onClick={handleGenerateCombination}
+                      type="button"
+                      className="mx-2"
+                    >
+                      <span className="text-xs">{t("GenerateVariants")}</span>
+                    </Button>
+                  )}
 
-        {variantTitle.length > 0 && (
-          <Button onClick={handleClearVariant} className="mx-2">
-            <span className="text-xs">{t("ClearVariants")}</span>
-          </Button>
-        )}
-      </div>
-    </div>
-  ))
-}
+                  {variantTitle.length > 0 && (
+                    <Button onClick={handleClearVariant} className="mx-2">
+                      <span className="text-xs">{t("ClearVariants")}</span>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))
+          }
 
-{
-  isCombination ? (
-    <DrawerButton
-      id={id}
-      save
-      title="Product"
-      isSubmitting={isSubmitting}
-      handleProductTap={handleProductTap}
-    />
-  ) : (
-    <DrawerButton id={id} title="Product" isSubmitting={isSubmitting} />
-  )
-}
+          {
+            isCombination ? (
+              <DrawerButton
+                id={id}
+                save
+                title="Product"
+                isSubmitting={isSubmitting}
+                handleProductTap={handleProductTap}
+              />
+            ) : (
+              <DrawerButton id={id} title="Product" isSubmitting={isSubmitting} />
+            )
+          }
 
-{
-  tapValue === "Combination" && (
-    <DrawerButton id={id} title="Product" isSubmitting={isSubmitting} />
-  )
-}
+          {
+            tapValue === "Combination" && (
+              <DrawerButton id={id} title="Product" isSubmitting={isSubmitting} />
+            )
+          }
         </form >
 
-  { tapValue === "Combination" &&
-  isCombination &&
-  variantTitle.length > 0 && (
-    <div className="px-6">
-      {/* {variants?.length >= 0 && ( */}
-      {isCombination && (
-        <TableContainer className="md:mb-32 mb-40 rounded-b-lg">
-          <Table>
-            <TableHeader>
-              <tr>
-                <TableCell>{t("Image")}</TableCell>
-                <TableCell>{t("Combination")}</TableCell>
-                <TableCell>{t("Sku")}</TableCell>
-                <TableCell>{t("Barcode")}</TableCell>
-                <TableCell>{t("Price")}</TableCell>
-                <TableCell>{t("SalePrice")}</TableCell>
-                <TableCell>{t("QuantityTbl")}</TableCell>
-                <TableCell className="text-right">
-                  {t("Action")}
-                </TableCell>
-              </tr>
-            </TableHeader>
+        {tapValue === "Combination" &&
+          isCombination &&
+          variantTitle.length > 0 && (
+            <div className="px-6">
+              {/* {variants?.length >= 0 && ( */}
+              {isCombination && (
+                <TableContainer className="md:mb-32 mb-40 rounded-b-lg">
+                  <Table>
+                    <TableHeader>
+                      <tr>
+                        <TableCell>{t("Image")}</TableCell>
+                        <TableCell>{t("Combination")}</TableCell>
+                        <TableCell>{t("Sku")}</TableCell>
+                        <TableCell>{t("Barcode")}</TableCell>
+                        <TableCell>{t("Price")}</TableCell>
+                        <TableCell>{t("SalePrice")}</TableCell>
+                        <TableCell>{t("QuantityTbl")}</TableCell>
+                        <TableCell className="text-right">
+                          {t("Action")}
+                        </TableCell>
+                      </tr>
+                    </TableHeader>
 
-            <AttributeListTable
-              lang={language}
-              variants={variants}
-              setTapValue={setTapValue}
-              variantTitle={variantTitle}
-              isBulkUpdate={isBulkUpdate}
-              handleSkuBarcode={handleSkuBarcode}
-              handleEditVariant={handleEditVariant}
-              handleRemoveVariant={handleRemoveVariant}
-              handleQuantityPrice={handleQuantityPrice}
-              handleSelectInlineImage={handleSelectInlineImage}
-            />
-          </Table>
-        </TableContainer>
-      )}
-    </div>
-  )}
+                    <AttributeListTable
+                      lang={language}
+                      variants={variants}
+                      setTapValue={setTapValue}
+                      variantTitle={variantTitle}
+                      isBulkUpdate={isBulkUpdate}
+                      handleSkuBarcode={handleSkuBarcode}
+                      handleEditVariant={handleEditVariant}
+                      handleRemoveVariant={handleRemoveVariant}
+                      handleQuantityPrice={handleQuantityPrice}
+                      handleSelectInlineImage={handleSelectInlineImage}
+                    />
+                  </Table>
+                </TableContainer>
+              )}
+            </div>
+          )}
       </Scrollbars >
     </>
   );
