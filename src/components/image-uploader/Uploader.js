@@ -20,7 +20,7 @@ cloudinary.config({
   api_secret: process.env.REACT_APP_CLOUDINARY_API_SECRET,
 });
 
-const Uploader = ({ setImageUrl, imageUrl, product, folder }) => {
+const Uploader = ({ setImageUrl, imageUrl, product, folder,accept = "image/*" }) => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [err, setError] = useState("");
@@ -32,7 +32,8 @@ const Uploader = ({ setImageUrl, imageUrl, product, folder }) => {
     useContext(SidebarContext);
 
   const { getRootProps, getInputProps, fileRejections } = useDropzone({
-    accept: "image/*",
+//accept: ["application/pdf", "image/*"],
+    accept,
     multiple: product ? true : false,
     maxSize: 500000,
     maxFiles: globalSetting?.number_of_image_per_product || 2,

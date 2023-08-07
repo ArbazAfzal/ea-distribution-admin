@@ -37,6 +37,13 @@ const ProductServices = {
   deleteManyProducts: async (body) => {
     return requests.patch("/products/delete/many", body);
   },
+  getUnit: async (body) => {
+    return requests.get("/unit", body);
+  },
+  getBrand: async (body) => {
+    return requests.get("/brand", body);
+  },
+  
 };
 
 export default ProductServices;
