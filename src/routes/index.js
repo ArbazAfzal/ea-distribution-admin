@@ -1,4 +1,7 @@
+import BrandDetails from "components/Brand/BrandDetails";
 import DiscountDetails from "components/discounTable/DiscountDetails";
+import Brand from "pages/Brand";
+import Unit from "pages/Unit";
 import UserDiscount from "pages/UserDiscount";
 import { lazy } from "react";
 
@@ -46,6 +49,15 @@ const routes = [
   {
     path: "/discountDetails/:id",
     component: DiscountDetails,
+  },
+  {
+    path: "/brand",
+    component:Brand,
+  },
+
+  {
+    path: "/unit",
+    component: Unit ,
   },
   {
     path: "/products",
