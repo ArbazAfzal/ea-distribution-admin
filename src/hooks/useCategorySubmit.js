@@ -154,25 +154,25 @@ const useCategorySubmit = (id, data) => {
             );
             
             setValue("language", language);
-            setValue("parentId", res.parentId);
-            setValue("parentname", res.parentName);
-            setValue("type", res.type)
-            setValue("metaTitle",res.metaTitle)
-            setValue("attributes", res.attributes)
-            setValue("orderNumber",res.orderNo)
+            setValue("parentId", res?.parentId);
+            setValue("parentname", res?.parentName);
+            setValue("type", res?.type)
+            setValue("metaTitle",res?.metaTitle)
+            setValue("attributes", res?.attributes)
+            setValue("orderNumber",res?.orderNo)
            // setValue("name",res.name.en)
-            setSelectCategoryName(res.parentName);
+            setSelectCategoryName(res?.parentName);
             setChecked(res.parentId);
             setImageUrl(res?.icon);
             setOrderNo(res?.orderNo)
             setParentName(res?.parentName)
-            setBannerImage(res.bannerImage)
-            setMetaImage(res.metaImage)
-            setCatName(res.catName)
-            setMetaTitle(res.metaTitle)
-            setMetaDescription(res.metaDescription)
-            setAttributes(res.attributes)
-            setType(res.type)
+            setBannerImage(res?.bannerImage)
+            setMetaImage(res?.metaImage)
+            setCatName(res?.catName)
+            setMetaTitle(res?.metaTitle)
+            setMetaDescription(res?.metaDescription)
+            setAttributes(res?.attributes)
+            setType(res?.type)
             setPublished(res.status === "show" ? true : false);
           }
         } catch (err) {
